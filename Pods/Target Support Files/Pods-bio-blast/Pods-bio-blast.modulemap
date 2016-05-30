@@ -1,0 +1,6 @@
+framework module Pods_bio_blast {
+  umbrella header "Pods-bio-blast-umbrella.h"
+
+  export *
+  module * { export * }
+}
