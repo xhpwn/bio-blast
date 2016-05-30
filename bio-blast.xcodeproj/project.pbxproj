@@ -14,6 +14,14 @@
 		1BCA83D31CFBD76E004C455A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BCA83D21CFBD76E004C455A /* Assets.xcassets */; };
 		1BCA83D61CFBD76E004C455A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BCA83D41CFBD76E004C455A /* LaunchScreen.storyboard */; };
 		1BCA83E41CFC0BB5004C455A /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83E31CFC0BB5004C455A /* LoginVC.swift */; };
+		1BCA83E71CFC1F91004C455A /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83E61CFC1F91004C455A /* DataService.swift */; };
+		1BCA83EA1CFC20F6004C455A /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83E91CFC20F6004C455A /* Firebase.framework */; };
+		1BCA83EC1CFC2148004C455A /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83EB1CFC2148004C455A /* libicucore.tbd */; };
+		1BCA83EE1CFC2156004C455A /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83ED1CFC2156004C455A /* libc++.tbd */; };
+		1BCA83F01CFC2160004C455A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83EF1CFC2160004C455A /* CFNetwork.framework */; };
+		1BCA83F21CFC2166004C455A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83F11CFC2166004C455A /* Security.framework */; };
+		1BCA83F41CFC216D004C455A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83F31CFC216D004C455A /* SystemConfiguration.framework */; };
+		1BCA83F71CFC2358004C455A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83F61CFC2358004C455A /* Constants.swift */; };
 		71F484D6F6F2D2F4EE6ED0EC /* Pods_bio_blast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94187F363F6785395801311 /* Pods_bio_blast.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +37,14 @@
 		1BCA83D71CFBD76E004C455A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BCA83DD1CFBDBEB004C455A /* bio-blast-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "bio-blast-Bridging-Header.h"; sourceTree = "<group>"; };
 		1BCA83E31CFC0BB5004C455A /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		1BCA83E61CFC1F91004C455A /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		1BCA83E91CFC20F6004C455A /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
+		1BCA83EB1CFC2148004C455A /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		1BCA83ED1CFC2156004C455A /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		1BCA83EF1CFC2160004C455A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		1BCA83F11CFC2166004C455A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		1BCA83F31CFC216D004C455A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1BCA83F61CFC2358004C455A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3AEB4874A532E516482D4F0E /* Pods-bio-blast.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bio-blast.release.xcconfig"; path = "Pods/Target Support Files/Pods-bio-blast/Pods-bio-blast.release.xcconfig"; sourceTree = "<group>"; };
 		F94187F363F6785395801311 /* Pods_bio_blast.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bio_blast.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -38,7 +54,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BCA83F41CFC216D004C455A /* SystemConfiguration.framework in Frameworks */,
+				1BCA83F21CFC2166004C455A /* Security.framework in Frameworks */,
+				1BCA83F01CFC2160004C455A /* CFNetwork.framework in Frameworks */,
+				1BCA83EE1CFC2156004C455A /* libc++.tbd in Frameworks */,
+				1BCA83EC1CFC2148004C455A /* libicucore.tbd in Frameworks */,
 				71F484D6F6F2D2F4EE6ED0EC /* Pods_bio_blast.framework in Frameworks */,
+				1BCA83EA1CFC20F6004C455A /* Firebase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +70,11 @@
 		0A4471BE669B8D20EC0BC7C8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BCA83F31CFC216D004C455A /* SystemConfiguration.framework */,
+				1BCA83F11CFC2166004C455A /* Security.framework */,
+				1BCA83EF1CFC2160004C455A /* CFNetwork.framework */,
+				1BCA83ED1CFC2156004C455A /* libc++.tbd */,
+				1BCA83EB1CFC2148004C455A /* libicucore.tbd */,
 				F94187F363F6785395801311 /* Pods_bio_blast.framework */,
 			);
 			name = Frameworks;
@@ -74,6 +101,9 @@
 		1BCA83C71CFBD76E004C455A /* bio-blast */ = {
 			isa = PBXGroup;
 			children = (
+				1BCA83F51CFC2342004C455A /* Util */,
+				1BCA83E81CFC20C2004C455A /* Frameworks */,
+				1BCA83E51CFC1F6E004C455A /* Services */,
 				1BCA83E11CFC0B75004C455A /* View */,
 				1BCA83E01CFC0B6F004C455A /* Model */,
 				1BCA83E21CFC0B78004C455A /* Controller */,
@@ -109,6 +139,30 @@
 				1BCA83E31CFC0BB5004C455A /* LoginVC.swift */,
 			);
 			name = Controller;
+			sourceTree = "<group>";
+		};
+		1BCA83E51CFC1F6E004C455A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1BCA83E61CFC1F91004C455A /* DataService.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		1BCA83E81CFC20C2004C455A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1BCA83E91CFC20F6004C455A /* Firebase.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1BCA83F51CFC2342004C455A /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				1BCA83F61CFC2358004C455A /* Constants.swift */,
+			);
+			name = Util;
 			sourceTree = "<group>";
 		};
 		F3CBE6729F5AAD9004900ACF /* Pods */ = {
@@ -252,6 +306,8 @@
 				1BCA83CB1CFBD76E004C455A /* ViewController.swift in Sources */,
 				1BCA83E41CFC0BB5004C455A /* LoginVC.swift in Sources */,
 				1BCA83C91CFBD76E004C455A /* AppDelegate.swift in Sources */,
+				1BCA83E71CFC1F91004C455A /* DataService.swift in Sources */,
+				1BCA83F71CFC2358004C455A /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +425,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/bio-blast",
+				);
 				INFOPLIST_FILE = "bio-blast/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.AlexBussan.bio-blast";
@@ -385,6 +445,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/bio-blast",
+				);
 				INFOPLIST_FILE = "bio-blast/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.AlexBussan.bio-blast";

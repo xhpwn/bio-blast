@@ -84,8 +84,14 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-bio-blast/Bolts.framework"
+  install_framework "Pods-bio-blast/FBSDKCoreKit.framework"
+  install_framework "Pods-bio-blast/FBSDKLoginKit.framework"
   install_framework "${PODS_ROOT}/LocationKit/LocationKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-bio-blast/Bolts.framework"
+  install_framework "Pods-bio-blast/FBSDKCoreKit.framework"
+  install_framework "Pods-bio-blast/FBSDKLoginKit.framework"
   install_framework "${PODS_ROOT}/LocationKit/LocationKit.framework"
 fi

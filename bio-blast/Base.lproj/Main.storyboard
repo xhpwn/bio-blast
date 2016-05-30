@@ -28,6 +28,9 @@
                                 <state key="normal" title="LOGIN WITH FACEBOOK">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="fbBtnPressed:" destination="aby-4p-Kix" eventType="touchUpInside" id="Ohq-VW-ZpM"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BioBlast" translatesAutoresizingMaskIntoConstraints="NO" id="cmE-ay-rNh">
                                 <rect key="frame" x="153" y="92" width="295" height="74"/>
@@ -64,7 +67,6 @@
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="fbLogin" destination="ryP-4N-kPY" id="6YZ-hT-8n1"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="loggedIn" id="w8d-8j-Bgf"/>
                     </connections>
                 </viewController>

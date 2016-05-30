@@ -5,4 +5,6 @@ use_frameworks!
 
 target 'bio-blast' do
   pod 'LocationKit', '~> 3.0.0'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
 end
