@@ -23,8 +23,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationManager.requestWhenInUseAuthorization()
+        
         self.locationManager.debug = true
         self.locationManager.apiToken = "21292208b912cf86"
+        //locationManager.requestAlwaysAuthorization()
         self.locationManager.startUpdatingLocation()
         
         map.delegate = self
@@ -32,6 +35,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func getLocation(sender: UIButton) {
+        
+        self.locationManager.startUpdatingLocation()
         
         self.locationManager.requestLocation { (location: CLLocation?, error: NSError?) -> Void in
             if let loc = location {

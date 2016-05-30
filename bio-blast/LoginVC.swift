@@ -36,7 +36,7 @@ class LoginVC: UIViewController {
                 //also make popup notification
             } else {
                 let accessToken = FBSDKAccessToken.currentAccessToken().tokenString
-                print("Successfully logged in with facebook. \(accessToken)")
+                print("Successfully logged in with facebook! \(accessToken)")
                 
                 DataService.ds.REF_BASE.authWithOAuthProvider("facebook", token: accessToken, withCompletionBlock: {error, authData in
                     
@@ -45,7 +45,8 @@ class LoginVC: UIViewController {
                     } else {
                         print("logged in!\(authData)")
                         
-                        let user = ["provider": authData.provider!, "blah": "test"]
+                        let user = ["isActive": "true", "addressId": "sdfhsd", "diseases": "poooo", "provider": authData.provider!, "blah": "test"]
+                        
                         DataService.ds.createFireBaseUser(authData.uid, user: user)
                         
                         NSUserDefaults.standardUserDefaults().setValue(authData.uid, forKey: KEY_UID)
