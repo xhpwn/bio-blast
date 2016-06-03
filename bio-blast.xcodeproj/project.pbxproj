@@ -23,6 +23,9 @@
 		1BCA83F41CFC216D004C455A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83F31CFC216D004C455A /* SystemConfiguration.framework */; };
 		1BCA83F71CFC2358004C455A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83F61CFC2358004C455A /* Constants.swift */; };
 		1BCA83FB1CFD54B6004C455A /* ContactAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83FA1CFD54B6004C455A /* ContactAnnotation.swift */; };
+		1BF05BE81D01AF3E0066A314 /* ClippedCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF05BE71D01AF3E0066A314 /* ClippedCircle.swift */; };
+		1BF05BEC1D01BAC50066A314 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF05BEB1D01BAC50066A314 /* MapVC.swift */; };
+		1BF05BF01D01BE8A0066A314 /* RoundedBorderLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF05BEF1D01BE8A0066A314 /* RoundedBorderLabel.swift */; };
 		71F484D6F6F2D2F4EE6ED0EC /* Pods_bio_blast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94187F363F6785395801311 /* Pods_bio_blast.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +50,9 @@
 		1BCA83F31CFC216D004C455A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1BCA83F61CFC2358004C455A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1BCA83FA1CFD54B6004C455A /* ContactAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactAnnotation.swift; sourceTree = "<group>"; };
+		1BF05BE71D01AF3E0066A314 /* ClippedCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClippedCircle.swift; sourceTree = "<group>"; };
+		1BF05BEB1D01BAC50066A314 /* MapVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
+		1BF05BEF1D01BE8A0066A314 /* RoundedBorderLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedBorderLabel.swift; sourceTree = "<group>"; };
 		3AEB4874A532E516482D4F0E /* Pods-bio-blast.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bio-blast.release.xcconfig"; path = "Pods/Target Support Files/Pods-bio-blast/Pods-bio-blast.release.xcconfig"; sourceTree = "<group>"; };
 		F94187F363F6785395801311 /* Pods_bio_blast.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bio_blast.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -131,6 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				1BCA83FA1CFD54B6004C455A /* ContactAnnotation.swift */,
+				1BF05BE71D01AF3E0066A314 /* ClippedCircle.swift */,
+				1BF05BEF1D01BE8A0066A314 /* RoundedBorderLabel.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -140,6 +148,7 @@
 			children = (
 				1BCA83CA1CFBD76E004C455A /* ViewController.swift */,
 				1BCA83E31CFC0BB5004C455A /* LoginVC.swift */,
+				1BF05BEB1D01BAC50066A314 /* MapVC.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -306,11 +315,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BCA83D11CFBD76E004C455A /* bio_blast.xcdatamodeld in Sources */,
+				1BF05BE81D01AF3E0066A314 /* ClippedCircle.swift in Sources */,
 				1BCA83CB1CFBD76E004C455A /* ViewController.swift in Sources */,
 				1BCA83E41CFC0BB5004C455A /* LoginVC.swift in Sources */,
 				1BCA83C91CFBD76E004C455A /* AppDelegate.swift in Sources */,
 				1BCA83E71CFC1F91004C455A /* DataService.swift in Sources */,
+				1BF05BF01D01BE8A0066A314 /* RoundedBorderLabel.swift in Sources */,
 				1BCA83F71CFC2358004C455A /* Constants.swift in Sources */,
+				1BF05BEC1D01BAC50066A314 /* MapVC.swift in Sources */,
 				1BCA83FB1CFD54B6004C455A /* ContactAnnotation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

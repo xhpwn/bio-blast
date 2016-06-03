@@ -7,4 +7,5 @@ target 'bio-blast' do
   pod 'LocationKit', '~> 3.0.0'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
+  pod 'Mapbox-iOS-SDK', '~> 3.2.2'
 end
