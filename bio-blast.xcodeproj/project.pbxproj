@@ -22,6 +22,7 @@
 		1BCA83F21CFC2166004C455A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83F11CFC2166004C455A /* Security.framework */; };
 		1BCA83F41CFC216D004C455A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCA83F31CFC216D004C455A /* SystemConfiguration.framework */; };
 		1BCA83F71CFC2358004C455A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83F61CFC2358004C455A /* Constants.swift */; };
+		1BCA83FB1CFD54B6004C455A /* ContactAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83FA1CFD54B6004C455A /* ContactAnnotation.swift */; };
 		71F484D6F6F2D2F4EE6ED0EC /* Pods_bio_blast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94187F363F6785395801311 /* Pods_bio_blast.framework */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		1BCA83F11CFC2166004C455A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		1BCA83F31CFC216D004C455A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1BCA83F61CFC2358004C455A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		1BCA83FA1CFD54B6004C455A /* ContactAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactAnnotation.swift; sourceTree = "<group>"; };
 		3AEB4874A532E516482D4F0E /* Pods-bio-blast.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bio-blast.release.xcconfig"; path = "Pods/Target Support Files/Pods-bio-blast/Pods-bio-blast.release.xcconfig"; sourceTree = "<group>"; };
 		F94187F363F6785395801311 /* Pods_bio_blast.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bio_blast.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -128,6 +130,7 @@
 		1BCA83E11CFC0B75004C455A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1BCA83FA1CFD54B6004C455A /* ContactAnnotation.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				1BCA83C91CFBD76E004C455A /* AppDelegate.swift in Sources */,
 				1BCA83E71CFC1F91004C455A /* DataService.swift in Sources */,
 				1BCA83F71CFC2358004C455A /* Constants.swift in Sources */,
+				1BCA83FB1CFD54B6004C455A /* ContactAnnotation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -30,7 +30,7 @@ class DataService {
         return _REF_USERS
     }
     
-    func createFireBaseUser(uid: String, user: Dictionary<String, String>) {
+    func createFireBaseUser(uid: String, user: Dictionary<String, AnyObject>) {
         REF_USERS.childByAppendingPath(uid).setValue(user)
     }
 }

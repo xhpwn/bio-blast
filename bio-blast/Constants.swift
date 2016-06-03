@@ -8,5 +8,7 @@
 
 import Foundation
 
+//let locationManager = LKLocationManager()
+
 let KEY_UID = "uid"
 let SEGUE_LOGGED_IN = "loggedIn"

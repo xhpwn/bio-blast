@@ -11,11 +11,13 @@ import FBSDKLoginKit
 import FBSDKCoreKit
 
 class LoginVC: UIViewController {
- 
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        locationManager.requestAlwaysAuthorization()
+//        locationManager.debug = true
+//        locationManager.apiToken = "21292208b912cf86"
+//        locationManager.startUpdatingLocation()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -45,7 +47,8 @@ class LoginVC: UIViewController {
                     } else {
                         print("logged in!\(authData)")
                         
-                        let user = ["isActive": "true", "addressId": "sdfhsd", "diseases": "poooo", "provider": authData.provider!, "blah": "test"]
+                        let diseaseDict = ["0": "adsgdfg", "1": "fghfg"]
+                        let user = ["isActive": "true", "addressId": "sdfhsd", "diseases": diseaseDict as AnyObject, "provider": authData.provider!, "blah": "test"]
                         
                         DataService.ds.createFireBaseUser(authData.uid, user: user)
                         
@@ -57,6 +60,7 @@ class LoginVC: UIViewController {
             }
         }
     }
+    
 
 
 }
