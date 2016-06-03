@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ryP-4N-kPY">
-                                <rect key="frame" x="195" y="206" width="211" height="30"/>
+                                <rect key="frame" x="195" y="274" width="211" height="30"/>
                                 <color key="backgroundColor" red="0.1176470588" green="0.53333333329999999" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="211" id="MbP-pb-0Tj"/>
@@ -33,7 +33,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BioBlast" translatesAutoresizingMaskIntoConstraints="NO" id="cmE-ay-rNh">
-                                <rect key="frame" x="153" y="92" width="295" height="74"/>
+                                <rect key="frame" x="153" y="160" width="295" height="74"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="295" id="Dtx-c6-yKq"/>
                                     <constraint firstAttribute="width" constant="370" id="dfv-bi-ybK"/>
@@ -52,10 +52,10 @@
                                 </variation>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cyan="0.81999999999999995" magenta="0.628035605" yellow="0.47941333060000002" black="0.028256846750000002" alpha="1" colorSpace="custom" customColorSpace="genericCMYKColorSpace"/>
                         <constraints>
                             <constraint firstItem="cmE-ay-rNh" firstAttribute="centerX" secondItem="H2L-SU-F86" secondAttribute="centerX" id="Hnm-AF-vgm"/>
-                            <constraint firstItem="cmE-ay-rNh" firstAttribute="top" secondItem="vwE-6X-iEe" secondAttribute="bottom" constant="72" id="LgP-z2-hWo"/>
+                            <constraint firstItem="cmE-ay-rNh" firstAttribute="top" secondItem="vwE-6X-iEe" secondAttribute="bottom" constant="140" id="LgP-z2-hWo"/>
                             <constraint firstItem="ryP-4N-kPY" firstAttribute="centerY" secondItem="H2L-SU-F86" secondAttribute="centerY" id="R3z-2A-Sbr"/>
                             <constraint firstItem="ryP-4N-kPY" firstAttribute="top" secondItem="cmE-ay-rNh" secondAttribute="bottom" constant="40" id="gV4-5v-DT1"/>
                             <constraint firstItem="ryP-4N-kPY" firstAttribute="centerX" secondItem="H2L-SU-F86" secondAttribute="centerX" id="liU-pM-cIJ"/>
@@ -67,7 +67,7 @@
                         </variation>
                     </view>
                     <connections>
-                        <segue destination="h3s-9V-sHr" kind="show" identifier="loggedIn" id="UTG-At-DM8"/>
+                        <segue destination="h3s-9V-sHr" kind="show" identifier="loggedIn" animates="NO" id="UTG-At-DM8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rCj-WI-W4P" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -215,7 +215,7 @@
             </objects>
             <point key="canvasLocation" x="198" y="-503"/>
         </scene>
-        <!--MapVC-->
+        <!--Delegate-->
         <scene sceneID="tpd-Ze-UCU">
             <objects>
                 <viewController id="h3s-9V-sHr" customClass="MapVC" customModule="bio_blast" customModuleProvider="target" sceneMemberID="viewController">
@@ -232,7 +232,17 @@
                                 <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/light-v9"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="allowsRotating" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="allowsTilting" value="NO"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="h3s-9V-sHr" id="dLP-WF-sRU"/>
+                                </connections>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rJn-Hq-HVE" userLabel="LoadingBlanket">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DpG-3f-Z4S" userLabel="TopMenuBtn">
                                 <rect key="frame" x="16" y="23" width="35" height="35"/>
@@ -323,6 +333,7 @@
                             <constraint firstItem="DpG-3f-Z4S" firstAttribute="top" secondItem="rf9-xi-qFq" secondAttribute="bottom" constant="3" id="36A-LT-TKr"/>
                             <constraint firstItem="hB7-Tv-d8l" firstAttribute="top" secondItem="OFq-Fq-U5y" secondAttribute="bottom" id="6fk-eu-JgE"/>
                             <constraint firstAttribute="trailing" secondItem="NOv-cz-1V6" secondAttribute="trailing" id="6x1-Fp-vuB"/>
+                            <constraint firstItem="rJn-Hq-HVE" firstAttribute="top" secondItem="ddp-BZ-Ost" secondAttribute="top" id="AHl-zN-7BK"/>
                             <constraint firstAttribute="bottomMargin" secondItem="95Q-Kz-QOU" secondAttribute="bottom" constant="-12" id="BM4-vW-PDj"/>
                             <constraint firstItem="95Q-Kz-QOU" firstAttribute="trailing" secondItem="inc-OU-OIV" secondAttribute="trailing" constant="120" id="CBz-oL-xU9"/>
                             <constraint firstAttribute="bottomMargin" secondItem="95Q-Kz-QOU" secondAttribute="bottom" constant="-7" id="Gtd-VO-iis"/>
@@ -331,9 +342,12 @@
                             <constraint firstAttribute="trailing" secondItem="OFq-Fq-U5y" secondAttribute="trailing" id="LWt-zD-qoZ"/>
                             <constraint firstItem="95Q-Kz-QOU" firstAttribute="trailing" secondItem="inc-OU-OIV" secondAttribute="trailing" constant="99" id="Oha-g8-hec"/>
                             <constraint firstItem="OFq-Fq-U5y" firstAttribute="leading" secondItem="ddp-BZ-Ost" secondAttribute="leading" id="Qa0-cO-ap3"/>
+                            <constraint firstItem="rJn-Hq-HVE" firstAttribute="leading" secondItem="ddp-BZ-Ost" secondAttribute="leading" id="TiE-Id-oOT"/>
+                            <constraint firstItem="hB7-Tv-d8l" firstAttribute="top" secondItem="rJn-Hq-HVE" secondAttribute="bottom" id="aJ5-lq-ouh"/>
                             <constraint firstItem="oPU-pN-XM5" firstAttribute="leading" secondItem="95Q-Kz-QOU" secondAttribute="leading" constant="99" id="bcP-LI-Ggb"/>
                             <constraint firstItem="hB7-Tv-d8l" firstAttribute="top" secondItem="95Q-Kz-QOU" secondAttribute="bottom" id="cZM-7j-qz8"/>
                             <constraint firstItem="DpG-3f-Z4S" firstAttribute="top" secondItem="rf9-xi-qFq" secondAttribute="bottom" constant="9" id="cqs-m6-eWn"/>
+                            <constraint firstAttribute="trailing" secondItem="rJn-Hq-HVE" secondAttribute="trailing" id="eVH-Jd-Qjf"/>
                             <constraint firstItem="onL-JZ-3zK" firstAttribute="centerX" secondItem="95Q-Kz-QOU" secondAttribute="centerX" id="fTf-l8-gE2"/>
                             <constraint firstItem="DpG-3f-Z4S" firstAttribute="top" secondItem="rf9-xi-qFq" secondAttribute="bottom" constant="20" id="ffp-wn-av0"/>
                             <constraint firstItem="DpG-3f-Z4S" firstAttribute="leading" secondItem="ddp-BZ-Ost" secondAttribute="leadingMargin" constant="-4" id="mM3-N8-uch"/>
@@ -355,6 +369,10 @@
                             </mask>
                         </variation>
                     </view>
+                    <connections>
+                        <outlet property="loadingBlanket" destination="rJn-Hq-HVE" id="YJc-vI-o9E"/>
+                        <outlet property="mapBox" destination="NOv-cz-1V6" id="xqx-T6-bHM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zyl-QB-NpA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -9,8 +9,12 @@
 import UIKit
 import MapKit
 import Firebase
+import Mapbox
 
-class MapVC: UIViewController, MKMapViewDelegate {
+class MapVC: UIViewController, MGLMapViewDelegate {
+    
+    @IBOutlet weak var mapBox: MGLMapView!
+    @IBOutlet weak var loadingBlanket: UIView!
     
     var currentPlaceStr: String = ""
     var currentAddressId: String = ""
@@ -25,6 +29,13 @@ class MapVC: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapBox.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        mapBox.delegate = self
+        
+        let center = CLLocationCoordinate2D(latitude: 42.22154654, longitude: -88.22007143)
+        mapBox.setCenterCoordinate(center, zoomLevel: 2, direction: 0, animated: false)
+        
         //locationManager.requestWhenInUseAuthorization()
         //locationManager.requestAlwaysAuthorization()
         
@@ -33,19 +44,25 @@ class MapVC: UIViewController, MKMapViewDelegate {
         locationManager.startUpdatingLocation()
     
         setupObserver()
+        
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    func mapViewDidFinishLoadingMap(mapBox: MGLMapView) {
+        
+        loadingBlanket.hidden = true
+        
+        let camera = MGLMapCamera(lookingAtCenterCoordinate: CLLocationCoordinate2D(latitude: 42.22154654, longitude: -88.22007143), fromDistance: 30000, pitch: 0, heading: 0)
+        
+        // Animate the camera movement over 5 seconds.
+        mapBox.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
     }
     
     func requestPlaceAndPushStreetAddressId() {
         
         locationManager.requestPlace { (place: LKPlacemark?, error: NSError?) -> Void in
             if let place = place {
-                self.currentPlaceStr = "\(place)"
                 
-                //
+                self.currentPlaceStr = "\(place)"
                 print(self.currentPlaceStr)
                 
                 if let addressId = place.addressId {
@@ -54,12 +71,9 @@ class MapVC: UIViewController, MKMapViewDelegate {
                     print("NO ADDRESS ID")
                 }
                 
-                //self.addressIdLbl.text = "\(self.currentAddressId)"
-                
                 if let currentLoc = place.location {
                     self.currentLoc = currentLoc
                 }
-                
                 
                 let retrievedUid: String? = String(NSUserDefaults.standardUserDefaults().objectForKey(KEY_UID)!)
                 
@@ -68,10 +82,6 @@ class MapVC: UIViewController, MKMapViewDelegate {
                 if let uidStr = retrievedUid {
                     DataService.ds.REF_USERS.childByAppendingPath("/\(uidStr)").updateChildValues(["addressId": self.currentAddressId, "blah": randomInt])
                 }
-                
-                
-                //self.placeLbl.text = self.currentPlaceStr
-                //self.coordsLbl.text = "\(place.location!.coordinate.latitude), \(place.location!.coordinate.longitude)"
                 
             } else if error != nil {
                 print("ERROR FETCHING PLACE: \(error.debugDescription)")
@@ -86,25 +96,12 @@ class MapVC: UIViewController, MKMapViewDelegate {
     @IBAction func getLocation(sender: UIButton) {
         
         NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(self.requestPlaceAndPushStreetAddressId), userInfo: nil, repeats: true)
-        
-        locationManager.requestLocation { (location: CLLocation?, error: NSError?) -> Void in
-            if let loc = location {
-                self.centerMapOnLocation(loc)
-            } else {
-                print("ERROR FETCHING LOCATION: \(error.debugDescription)")
-            }
-        }
-        
-    }
-    
-    func centerMapOnLocation(location: CLLocation) {
-        let coorinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius * 2, regionRadius * 2)
-        //map.setRegion(coorinateRegion, animated: true)
     }
     
     func setupObserver() {
         
         DataService.ds.REF_USERS.observeEventType(.Value, withBlock: { snapshot in
+            // CALLED ANY TIME ANY USERS INFO CHANGES
             
             //print(snapshot.value)
             //annotate for location change
@@ -126,30 +123,27 @@ class MapVC: UIViewController, MKMapViewDelegate {
                             if addressId == self.currentAddressId {
                                 let uid = snap.key
                                 self.uids.append(uid)
-                                if let currentLoc = self.currentLoc {
-                                    //annotate for contact event
-                                    //self.createAnnotationForLocation(currentLoc)
-                                }
                             }
                         }
-                        
-                        //let post = Post(postKey: key, dictionary: postDict)
-                        //self.posts.append(post)
                     }
                 }
                 print("array of uids matching current addressId: \(self.uids)")
                 //self.nearbyPeopleCountLbl.text = String(self.uids.count - 1)
                 
                 //create infection annotation
-                
             }
         })
     }
     
-    //FIX
     func createAnnotationForLocation(location: CLLocation) {
-        let bootcamp = ContactAnnotation(coordinate: location.coordinate)
-        //map.addAnnotation(bootcamp)
+        
+        let point = MGLPointAnnotation()
+        point.coordinate = location.coordinate
+        //point.title = "Voodoo Doughnut"
+        //point.subtitle = "22 SW 3rd Avenue Portland Oregon, U.S.A."
+        
+        mapBox.addAnnotation(point)
+        print("CREATED ANNOTATION")
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
