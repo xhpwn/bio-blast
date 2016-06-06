@@ -16,11 +16,13 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var mapBox: MGLMapView!
     @IBOutlet weak var loadingBlanket: UIView!
+    @IBOutlet weak var totalInfectedLbl: UILabel!
     
     var currentPlaceStr: String = ""
     var currentAddressId: String = ""
     var prevAddressId: String = ""
     var firstAnnotation = true
+    var firstObserver = true
     //var firstRun = NSUserdefaults
     
     var currentLoc: CLLocation?
@@ -28,6 +30,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
     let locationManager = LKLocationManager()
     let ClLocationManager = CLLocationManager()
+    let GET_PLACE_AND_PUSH_INTERVAL: Double = 5
     
     var sameAddressUids: [String] = []
     var collectedUids: [String] = []
@@ -43,6 +46,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
         
         mapBox.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         mapBox.delegate = self
+        mapBox.tintColor = UIColor.redColor()
         
         
         //FIX
@@ -50,15 +54,48 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
         //let center = CLLocationCoordinate2D(latitude: 42.22154654, longitude: -88.22007143)
         //mapBox.setCenterCoordinate(center, zoomLevel: 2, direction: 0, animated: false)
         
-        //locationManager.requestWhenInUseAuthorization()
-        //locationManager.requestAlwaysAuthorization()
-        
         locationManager.debug = true
         locationManager.apiToken = "21292208b912cf86"
         locationManager.startUpdatingLocation()
-    
-        setupObserver()
         
+    }
+    
+    func mapView(mapView: MGLMapView, fillColorForPolygonAnnotation annotation: MGLPolygon) -> UIColor {
+        return UIColor(red: 180/255, green: 45/255, blue: 58/255, alpha: 1)
+    }
+    
+    func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+        return UIColor(red: 255/255, green: 45/255, blue: 58/255, alpha: 1)
+    }
+    
+    func mapView(mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
+        return 0.2
+    }
+    
+    func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRadius: Double) {
+        let degreesBetweenPoints = 8.0
+        //45 sides
+        let numberOfPoints = floor(360.0 / degreesBetweenPoints)
+        let distRadians: Double = withMeterRadius / 6371000.0
+        // earth radius in meters
+        let centerLatRadians: Double = coordinate.latitude * M_PI / 180
+        let centerLonRadians: Double = coordinate.longitude * M_PI / 180
+        var coordinates = [CLLocationCoordinate2D]()
+        //array to hold all the points
+        for var index = 0; index < Int(numberOfPoints); index++ {
+            let degrees: Double = Double(index) * Double(degreesBetweenPoints)
+            let degreeRadians: Double = degrees * M_PI / 180
+            let pointLatRadians: Double = asin(sin(centerLatRadians) * cos(distRadians) + cos(centerLatRadians) * sin(distRadians) * cos(degreeRadians))
+            let pointLonRadians: Double = centerLonRadians + atan2(sin(degreeRadians) * sin(distRadians) * cos(centerLatRadians), cos(distRadians) - sin(centerLatRadians) * sin(pointLatRadians))
+            let pointLat: Double = pointLatRadians * 180 / M_PI
+            let pointLon: Double = pointLonRadians * 180 / M_PI
+            let point: CLLocationCoordinate2D = CLLocationCoordinate2DMake(pointLat, pointLon)
+            coordinates.append(point)
+        }
+        let polygon = MGLPolygon(coordinates: &coordinates, count: UInt(coordinates.count))
+        
+        
+        self.mapBox.addAnnotation(polygon)
     }
     
     func zoomCameraToCurrentCenter() {
@@ -67,8 +104,19 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
             print("r")
             let camera = MGLMapCamera(lookingAtCenterCoordinate: currentCenter, fromDistance: 30000, pitch: 0, heading: 0)
             
-            // Animate the camera movement over 5 seconds.
             mapBox.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
+            
+            //polygonCircleForCoordinate(currentCenter, withMeterRadius: 500)
+        }
+    }
+    
+    func startPushingandPulling() {
+        requestPlaceAndPushStreetAddressId()
+        NSTimer.scheduledTimerWithTimeInterval(GET_PLACE_AND_PUSH_INTERVAL, target: self, selector: #selector(self.requestPlaceAndPushStreetAddressId), userInfo: nil, repeats: true)
+        
+        if firstObserver == true {
+            setupObserver()
+            firstObserver = false
         }
     }
     
@@ -82,7 +130,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
                 print("Access")
                 _ = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: #selector(self.zoomCameraToCurrentCenter), userInfo: nil, repeats: false)
                 
-                //timer.invalidate()
+                _ = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: #selector(self.startPushingandPulling), userInfo: nil, repeats: false)
             }
         } else {
             print("Location services are not enabled")
@@ -99,7 +147,6 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
             
             ClLocationManager.stopUpdatingLocation()
         }
-        
     }
     
     func mapViewDidFinishLoadingMap(mapBox: MGLMapView) {
@@ -146,8 +193,11 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
             }
             
             if let currentLoc = self.currentLoc where self.currentAddressId != self.prevAddressId {
-                self.createAnnotationForLocation(currentLoc)
-                print("c")
+                //FIX
+                //self.createAnnotationForLocation(currentLoc)
+                if let currentCenter = self.currentCenter {
+                    self.polygonCircleForCoordinate(currentCenter, withMeterRadius: 500)
+                }
             }
             
             if self.firstAnnotation == false {
@@ -157,14 +207,11 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
                 self.firstAnnotation = false
                 print("b")
             }
-            
         }
     }
     
     @IBAction func getLocation(sender: UIButton) {
-        
-        requestPlaceAndPushStreetAddressId()
-        NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(self.requestPlaceAndPushStreetAddressId), userInfo: nil, repeats: true)
+
     }
     
     func setupObserver() {
@@ -203,9 +250,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
                     }
                 }
                 print("array of uids matching current addressId: \(self.sameAddressUids)")
-                //self.nearbyPeopleCountLbl.text = String(self.uids.count - 1)
                 
-                //TEST
                 //checks for any new uids that are nearby and adds them to self's diseaseArray
                 
                 for uid in self.sameAddressUids {
@@ -213,11 +258,18 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
                         print("disregard")
                     } else {
                         self.collectedUids.append(uid)
+                        
+                        //create infection annotation
+                        if let currentCenter = self.currentCenter {
+                            self.polygonCircleForCoordinate(currentCenter, withMeterRadius: 500)
+                        }
+                        
                     }
                 }
                 
                 
                 print("TOTAL INFECTED: \(self.collectedUids.count)")
+                self.totalInfectedLbl.text = "Infected: \(self.collectedUids.count)"
                 
                 //create infection annotation
             }
@@ -233,22 +285,6 @@ class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
         
         mapBox.addAnnotation(point)
         print("CREATED ANNOTATION")
-    }
-    
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        if annotation.isKindOfClass(ContactAnnotation) {
-            let annoView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "Default")
-            annoView.pinTintColor = UIColor.blackColor()
-            annoView.animatesDrop = true
-            
-            return annoView
-            
-        } else if annotation.isKindOfClass(MKUserLocation) {
-            return nil
-        }
-        
-        return nil
     }
     
 }

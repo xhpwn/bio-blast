@@ -18,6 +18,9 @@ class RoundedBar: UIView {
     }
     */
     
-    override func
+    override func awakeFromNib() {
+        layer.cornerRadius = frame.size.height / 2
+        self.clipsToBounds = true
+    }
 
 }
