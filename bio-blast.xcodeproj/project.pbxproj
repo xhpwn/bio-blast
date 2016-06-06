@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B955A991D053F4B003C3BF1 /* RoundedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B955A981D053F4B003C3BF1 /* RoundedBar.swift */; };
 		1BCA83C91CFBD76E004C455A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83C81CFBD76E004C455A /* AppDelegate.swift */; };
 		1BCA83CB1CFBD76E004C455A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83CA1CFBD76E004C455A /* ViewController.swift */; };
 		1BCA83CE1CFBD76E004C455A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BCA83CC1CFBD76E004C455A /* Main.storyboard */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		0E1C014A25BE05B37A9E1D4F /* Pods-bio-blast.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bio-blast.debug.xcconfig"; path = "Pods/Target Support Files/Pods-bio-blast/Pods-bio-blast.debug.xcconfig"; sourceTree = "<group>"; };
+		1B955A981D053F4B003C3BF1 /* RoundedBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedBar.swift; sourceTree = "<group>"; };
 		1BCA83C51CFBD76E004C455A /* bio-blast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "bio-blast.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BCA83C81CFBD76E004C455A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1BCA83CA1CFBD76E004C455A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				1BCA83FA1CFD54B6004C455A /* ContactAnnotation.swift */,
 				1BF05BE71D01AF3E0066A314 /* ClippedCircle.swift */,
 				1BF05BEF1D01BE8A0066A314 /* RoundedBorderLabel.swift */,
+				1B955A981D053F4B003C3BF1 /* RoundedBar.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				1BCA83CB1CFBD76E004C455A /* ViewController.swift in Sources */,
 				1BCA83E41CFC0BB5004C455A /* LoginVC.swift in Sources */,
 				1BCA83C91CFBD76E004C455A /* AppDelegate.swift in Sources */,
+				1B955A991D053F4B003C3BF1 /* RoundedBar.swift in Sources */,
 				1BCA83E71CFC1F91004C455A /* DataService.swift in Sources */,
 				1BF05BF01D01BE8A0066A314 /* RoundedBorderLabel.swift in Sources */,
 				1BCA83F71CFC2358004C455A /* Constants.swift in Sources */,

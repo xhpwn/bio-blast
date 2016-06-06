@@ -10,8 +10,9 @@ import UIKit
 import MapKit
 import Firebase
 import Mapbox
+import CoreLocation
 
-class MapVC: UIViewController, MGLMapViewDelegate {
+class MapVC: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var mapBox: MGLMapView!
     @IBOutlet weak var loadingBlanket: UIView!
@@ -19,22 +20,35 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     var currentPlaceStr: String = ""
     var currentAddressId: String = ""
     var prevAddressId: String = ""
+    var firstAnnotation = true
+    //var firstRun = NSUserdefaults
     
     var currentLoc: CLLocation?
+    var currentCenter: CLLocationCoordinate2D?
     
     let locationManager = LKLocationManager()
-    let regionRadius: CLLocationDistance = 250
+    let ClLocationManager = CLLocationManager()
     
-    var uids: [String] = []
+    var sameAddressUids: [String] = []
+    var collectedUids: [String] = []
+    var numInfected = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ClLocationManager.delegate = self
+        ClLocationManager.desiredAccuracy = kCLLocationAccuracyBest
+        ClLocationManager.requestWhenInUseAuthorization()
+        ClLocationManager.startUpdatingLocation()
+        
         mapBox.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         mapBox.delegate = self
         
-        let center = CLLocationCoordinate2D(latitude: 42.22154654, longitude: -88.22007143)
-        mapBox.setCenterCoordinate(center, zoomLevel: 2, direction: 0, animated: false)
+        
+        //FIX
+        
+        //let center = CLLocationCoordinate2D(latitude: 42.22154654, longitude: -88.22007143)
+        //mapBox.setCenterCoordinate(center, zoomLevel: 2, direction: 0, animated: false)
         
         //locationManager.requestWhenInUseAuthorization()
         //locationManager.requestAlwaysAuthorization()
@@ -47,17 +61,60 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         
     }
     
+    func zoomCameraToCurrentCenter() {
+        print("q")
+        if let currentCenter = currentCenter {
+            print("r")
+            let camera = MGLMapCamera(lookingAtCenterCoordinate: currentCenter, fromDistance: 30000, pitch: 0, heading: 0)
+            
+            // Animate the camera movement over 5 seconds.
+            mapBox.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        
+        if CLLocationManager.locationServicesEnabled() {
+            switch(CLLocationManager.authorizationStatus()) {
+            case .NotDetermined, .Restricted, .Denied:
+                print("No access")
+            case .AuthorizedAlways, .AuthorizedWhenInUse:
+                print("Access")
+                _ = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: #selector(self.zoomCameraToCurrentCenter), userInfo: nil, repeats: false)
+                
+                //timer.invalidate()
+            }
+        } else {
+            print("Location services are not enabled")
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        if let currentLoc = locations.first {
+            self.currentLoc = currentLoc
+            
+            self.currentCenter = CLLocationCoordinate2D(latitude: currentLoc.coordinate.latitude, longitude: currentLoc.coordinate.longitude)
+            print(self.currentCenter)
+            
+            ClLocationManager.stopUpdatingLocation()
+        }
+        
+    }
+    
     func mapViewDidFinishLoadingMap(mapBox: MGLMapView) {
         
         loadingBlanket.hidden = true
-        
-        let camera = MGLMapCamera(lookingAtCenterCoordinate: CLLocationCoordinate2D(latitude: 42.22154654, longitude: -88.22007143), fromDistance: 30000, pitch: 0, heading: 0)
-        
-        // Animate the camera movement over 5 seconds.
-        mapBox.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
     }
     
     func requestPlaceAndPushStreetAddressId() {
+        
+        locationManager.requestLocation { (location: CLLocation?, error: NSError?) -> Void in
+            // We have to make sure the location is set, could be nil
+            if let location = location {
+                print("You are currently at: \(location)")
+            }
+        }
         
         locationManager.requestPlace { (place: LKPlacemark?, error: NSError?) -> Void in
             if let place = place {
@@ -67,6 +124,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                 
                 if let addressId = place.addressId {
                     self.currentAddressId = addressId
+                    print("d")
                 } else {
                     print("NO ADDRESS ID")
                 }
@@ -77,10 +135,8 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                 
                 let retrievedUid: String? = String(NSUserDefaults.standardUserDefaults().objectForKey(KEY_UID)!)
                 
-                let randomInt = Int(arc4random_uniform(10000))
-                
                 if let uidStr = retrievedUid {
-                    DataService.ds.REF_USERS.childByAppendingPath("/\(uidStr)").updateChildValues(["addressId": self.currentAddressId, "blah": randomInt])
+                    DataService.ds.REF_USERS.childByAppendingPath("/\(uidStr)").updateChildValues(["addressId": self.currentAddressId])
                 }
                 
             } else if error != nil {
@@ -88,29 +144,37 @@ class MapVC: UIViewController, MGLMapViewDelegate {
             } else {
                 print("NO ERROR, BUT PLACE COULD NOT BE FOUND")
             }
+            
+            if let currentLoc = self.currentLoc where self.currentAddressId != self.prevAddressId {
+                self.createAnnotationForLocation(currentLoc)
+                print("c")
+            }
+            
+            if self.firstAnnotation == false {
+                self.prevAddressId = self.currentAddressId
+                print("a")
+            } else {
+                self.firstAnnotation = false
+                print("b")
+            }
+            
         }
-        
-        prevAddressId = currentAddressId
     }
     
     @IBAction func getLocation(sender: UIButton) {
         
+        requestPlaceAndPushStreetAddressId()
         NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(self.requestPlaceAndPushStreetAddressId), userInfo: nil, repeats: true)
     }
     
     func setupObserver() {
         
         DataService.ds.REF_USERS.observeEventType(.Value, withBlock: { snapshot in
-            // CALLED ANY TIME ANY USERS INFO CHANGES
+            // CALLED ANY TIME ANY USER'S INFO CHANGES
             
             //print(snapshot.value)
-            //annotate for location change
             
-            if let currentLoc = self.currentLoc where self.currentAddressId != self.prevAddressId {
-                self.createAnnotationForLocation(currentLoc)
-            }
-            
-            self.uids = []
+            self.sameAddressUids = []
             
             if let snapshots = snapshot.children.allObjects as? [FDataSnapshot] {
                 for snap in snapshots {
@@ -122,13 +186,38 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                             
                             if addressId == self.currentAddressId {
                                 let uid = snap.key
-                                self.uids.append(uid)
+                                self.sameAddressUids.append(uid)
+                                
+                                //grab snap's diseaseArray
+                                var snapDiseaseArray = userDict["diseases"] as? Dictionary<String, AnyObject>
+                                
+                                //add self diseaseArray to snap's diseaseArray
+                                //Stackoverflow solution to add 2 dictionaries
+                                
+                                
+                                //set updated value of snap's diseaseArray
+                                DataService.ds.REF_USERS.childByAppendingPath("/\(uid)/diseases").setValue(snapDiseaseArray)
+                            
                             }
                         }
                     }
                 }
-                print("array of uids matching current addressId: \(self.uids)")
+                print("array of uids matching current addressId: \(self.sameAddressUids)")
                 //self.nearbyPeopleCountLbl.text = String(self.uids.count - 1)
+                
+                //TEST
+                //checks for any new uids that are nearby and adds them to self's diseaseArray
+                
+                for uid in self.sameAddressUids {
+                    if self.collectedUids.contains(uid) {
+                        print("disregard")
+                    } else {
+                        self.collectedUids.append(uid)
+                    }
+                }
+                
+                
+                print("TOTAL INFECTED: \(self.collectedUids.count)")
                 
                 //create infection annotation
             }
