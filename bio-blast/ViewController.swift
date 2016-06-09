@@ -131,10 +131,10 @@ class ViewController: UIViewController, MKMapViewDelegate {
                             if addressId == self.currentAddressId {
                                 let uid = snap.key
                                 self.uids.append(uid)
-                                if let currentLoc = self.currentLoc {
+                                //if let currentLoc = self.currentLoc {
                                     //annotate for contact event
                                     //self.createAnnotationForLocation(currentLoc)
-                                }
+                                //}
                             }
                         }
                         
