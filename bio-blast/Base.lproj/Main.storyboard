@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aby-4p-Kix">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -328,21 +327,6 @@
                                             <action selector="getLocation:" destination="h3s-9V-sHr" eventType="touchUpInside" id="KAQ-GH-hoP"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="man" translatesAutoresizingMaskIntoConstraints="NO" id="mct-RM-3tq">
-                                        <rect key="frame" x="166" y="6" width="24" height="24"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="24" id="EzB-ef-XGe"/>
-                                            <constraint firstAttribute="height" constant="32" id="PO8-UP-Zom"/>
-                                            <constraint firstAttribute="height" constant="24" id="Sbn-Qu-c1V"/>
-                                            <constraint firstAttribute="width" constant="32" id="luc-Yu-3e1"/>
-                                        </constraints>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="PO8-UP-Zom"/>
-                                                <exclude reference="luc-Yu-3e1"/>
-                                            </mask>
-                                        </variation>
-                                    </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dna" translatesAutoresizingMaskIntoConstraints="NO" id="mnF-R6-IzT">
                                         <rect key="frame" x="51" y="6" width="24" height="24"/>
                                         <constraints>
@@ -376,19 +360,54 @@
                                             </mask>
                                         </variation>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xll-wc-0po">
+                                        <rect key="frame" x="552" y="8" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="8jm-aG-1Ns"/>
+                                            <constraint firstAttribute="width" constant="20" id="Rbe-yo-6PR"/>
+                                        </constraints>
+                                        <state key="normal" image="earth-globe"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9lF-EA-daR">
+                                        <rect key="frame" x="520" y="8" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="L8C-6P-ifp"/>
+                                            <constraint firstAttribute="width" constant="20" id="Oy0-pE-FCJ"/>
+                                        </constraints>
+                                        <state key="normal" image="location-pin"/>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="man" translatesAutoresizingMaskIntoConstraints="NO" id="mct-RM-3tq">
+                                        <rect key="frame" x="166" y="6" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="EzB-ef-XGe"/>
+                                            <constraint firstAttribute="height" constant="32" id="PO8-UP-Zom"/>
+                                            <constraint firstAttribute="height" constant="24" id="Sbn-Qu-c1V"/>
+                                            <constraint firstAttribute="width" constant="32" id="luc-Yu-3e1"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="PO8-UP-Zom"/>
+                                                <exclude reference="luc-Yu-3e1"/>
+                                            </mask>
+                                        </variation>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.1647058824" green="0.20784313730000001" blue="0.24313725489999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="DpG-3f-Z4S" firstAttribute="top" secondItem="Hq6-J7-fex" secondAttribute="top" id="4Pn-Pn-siQ"/>
+                                    <constraint firstItem="9lF-EA-daR" firstAttribute="centerY" secondItem="Hq6-J7-fex" secondAttribute="centerY" id="6ez-a3-PMf"/>
                                     <constraint firstAttribute="bottom" secondItem="ZLD-Sr-L2a" secondAttribute="bottom" constant="15" id="8xH-0x-ALH"/>
                                     <constraint firstItem="mct-RM-3tq" firstAttribute="leading" secondItem="fLL-uF-b6k" secondAttribute="trailing" constant="8" id="D7w-E8-Tao"/>
                                     <constraint firstItem="DpG-3f-Z4S" firstAttribute="leading" secondItem="Hq6-J7-fex" secondAttribute="leading" id="Dhe-dr-LqU"/>
+                                    <constraint firstItem="Xll-wc-0po" firstAttribute="centerY" secondItem="Hq6-J7-fex" secondAttribute="centerY" id="E40-uI-RQi"/>
                                     <constraint firstItem="DpG-3f-Z4S" firstAttribute="top" secondItem="Hq6-J7-fex" secondAttribute="top" constant="20" id="F1C-nK-VwO"/>
                                     <constraint firstAttribute="bottom" secondItem="mnF-R6-IzT" secondAttribute="bottom" constant="9" id="NED-1I-2bB"/>
                                     <constraint firstAttribute="bottom" secondItem="fLL-uF-b6k" secondAttribute="bottom" constant="7" id="Rad-9f-ECp"/>
                                     <constraint firstAttribute="height" constant="35" id="UtQ-BD-9yu"/>
                                     <constraint firstAttribute="height" constant="35" id="X5v-j5-g18"/>
                                     <constraint firstItem="fLL-uF-b6k" firstAttribute="leading" secondItem="mnF-R6-IzT" secondAttribute="trailing" constant="8" id="YUC-ce-k15"/>
+                                    <constraint firstItem="Xll-wc-0po" firstAttribute="leading" secondItem="9lF-EA-daR" secondAttribute="trailing" constant="12" id="eVd-68-zj0"/>
+                                    <constraint firstAttribute="trailing" secondItem="Xll-wc-0po" secondAttribute="trailing" constant="8" id="j3X-5e-eQ6"/>
                                     <constraint firstAttribute="height" constant="63" id="jFt-6z-CmG"/>
                                     <constraint firstItem="mnF-R6-IzT" firstAttribute="leading" secondItem="DpG-3f-Z4S" secondAttribute="trailing" constant="16" id="lJh-Lu-jwl"/>
                                     <constraint firstAttribute="bottom" secondItem="fLL-uF-b6k" secondAttribute="bottom" constant="15" id="lr4-JE-6ZF"/>
@@ -568,6 +587,8 @@
         <image name="BioBlast" width="443" height="72"/>
         <image name="biohazard-symbol" width="256" height="256"/>
         <image name="dna" width="64" height="64"/>
+        <image name="earth-globe" width="128" height="128"/>
+        <image name="location-pin" width="64" height="64"/>
         <image name="man" width="64" height="64"/>
         <image name="round_menu" width="128" height="128"/>
     </resources>

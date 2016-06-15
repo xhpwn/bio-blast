@@ -23,11 +23,19 @@ class LoginVC: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        print(NSUserDefaults.standardUserDefaults().valueForKey(KEY_UID))
+        
         if NSUserDefaults.standardUserDefaults().valueForKey(KEY_UID) != nil {
+            
             self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
         }
     }
     
+
+//        FBSDKLoginManager().logOut()
+//        DataService.ds.REF_BASE.unauth()
+
+
     @IBAction func fbBtnPressed(sender: UIButton) {
         let facebookLogin = FBSDKLoginManager()
         
@@ -40,6 +48,7 @@ class LoginVC: UIViewController {
                 let accessToken = FBSDKAccessToken.currentAccessToken().tokenString
                 print("Successfully logged in with facebook! \(accessToken)")
                 
+                
                 DataService.ds.REF_BASE.authWithOAuthProvider("facebook", token: accessToken, withCompletionBlock: {error, authData in
                     
                     if error != nil {
@@ -47,10 +56,10 @@ class LoginVC: UIViewController {
                     } else {
                         print("logged in!\(authData)")
                         
-                        let diseaseDict = ["0": "adsgdfg", "1": "fghfg"]
-                        let user = ["isActive": "true", "addressId": "sdfhsd", "diseases": diseaseDict as AnyObject, "provider": authData.provider!, "blah": "test"]
+                        let diseaseDict = [authData.uid: "Steve Disease"]
+                        let user = ["isActive": "true", "diseases": diseaseDict as Dictionary<String, AnyObject>, "provider": authData.provider!]
                         
-                        DataService.ds.createFireBaseUser(authData.uid, user: user)
+                        DataService.ds.createFireBaseUser(authData.uid, user: user as! Dictionary<String, AnyObject>)
                         
                         NSUserDefaults.standardUserDefaults().setValue(authData.uid, forKey: KEY_UID)
                         self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
@@ -58,6 +67,9 @@ class LoginVC: UIViewController {
                 })
                 
             }
+            
+//            facebookLogin.logOut()
+//            NSUserDefaults.standardUserDefaults().setValue(nil, forKey: KEY_UID)
         }
     }
     

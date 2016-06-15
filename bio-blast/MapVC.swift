@@ -7,13 +7,21 @@
 //
 
 //ADD
-//DNA points on top bar, use symbols, smaller text?
+//circle annotations to show other nearby users
 //zoom buttons on top bar, one to jump local, one world view
 //use place for annotation location
 //turn off observer in background, possibly make single calls in loop for foreground
 //apply to Spotify
 //find place on initial install startup
 //persist numInfected / annotations
+//random disease name generator
+
+//BUGS 
+
+//verify name and deviceID
+//self.name in other users is different
+//allow A to C passing
+//right now we're showing how many people have infected YOU, we need to show how many people self has infected
 
 //implement disease spreading mechanic, allows for seeing who infected you/3rd party pass
 
@@ -25,6 +33,8 @@ import MapKit
 import Firebase
 import Mapbox
 import CoreLocation
+import FBSDKCoreKit
+import FBSDKLoginKit
 
 class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     
@@ -42,6 +52,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     var firstAnnotation = true
     var firstObserver = true
     var UID = ""
+    var diseaseDict: Dictionary<String,String> = ["":""]
     
     var diseases: [String] = []
     //var firstRun = NSUserdefaults
@@ -81,15 +92,19 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         
         if let uid = uid {
             UID = uid as! String
+            print("UID: \(uid)")
         }
         
-        let userValuesDict = ["name": "YOOOO"] as [NSObject: AnyObject]
+        print(UID)
+        let userValuesDict = ["name": UID] as [NSObject: AnyObject]
         
         locationManager.setUserValues(userValuesDict)
         
         locationManager.advancedDelegate = self
         locationManager.startUpdatingLocation()
         locationManager.startMonitoringVisits()
+        
+        _ = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.stopSettingCenterCoord), userInfo: nil, repeats: false)
     
         
     }
@@ -106,31 +121,31 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         return 0.2
     }
     
-    func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRadius: Double) {
-        let degreesBetweenPoints = 8.0
-        //45 sides
-        let numberOfPoints = floor(360.0 / degreesBetweenPoints)
-        let distRadians: Double = withMeterRadius / 6371000.0
-        // earth radius in meters
-        let centerLatRadians: Double = coordinate.latitude * M_PI / 180
-        let centerLonRadians: Double = coordinate.longitude * M_PI / 180
-        var coordinates = [CLLocationCoordinate2D]()
-        //array to hold all the points
-        for index in 0 ..< Int(numberOfPoints) {
-            let degrees: Double = Double(index) * Double(degreesBetweenPoints)
-            let degreeRadians: Double = degrees * M_PI / 180
-            let pointLatRadians: Double = asin(sin(centerLatRadians) * cos(distRadians) + cos(centerLatRadians) * sin(distRadians) * cos(degreeRadians))
-            let pointLonRadians: Double = centerLonRadians + atan2(sin(degreeRadians) * sin(distRadians) * cos(centerLatRadians), cos(distRadians) - sin(centerLatRadians) * sin(pointLatRadians))
-            let pointLat: Double = pointLatRadians * 180 / M_PI
-            let pointLon: Double = pointLonRadians * 180 / M_PI
-            let point: CLLocationCoordinate2D = CLLocationCoordinate2DMake(pointLat, pointLon)
-            coordinates.append(point)
-        }
-        let polygon = MGLPolygon(coordinates: &coordinates, count: UInt(coordinates.count))
-        
-        
-        self.mapBox.addAnnotation(polygon)
-    }
+//    func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRadius: Double) {
+//        let degreesBetweenPoints = 8.0
+//        //45 sides
+//        let numberOfPoints = floor(360.0 / degreesBetweenPoints)
+//        let distRadians: Double = withMeterRadius / 6371000.0
+//        // earth radius in meters
+//        let centerLatRadians: Double = coordinate.latitude * M_PI / 180
+//        let centerLonRadians: Double = coordinate.longitude * M_PI / 180
+//        var coordinates = [CLLocationCoordinate2D]()
+//        //array to hold all the points
+//        for index in 0 ..< Int(numberOfPoints) {
+//            let degrees: Double = Double(index) * Double(degreesBetweenPoints)
+//            let degreeRadians: Double = degrees * M_PI / 180
+//            let pointLatRadians: Double = asin(sin(centerLatRadians) * cos(distRadians) + cos(centerLatRadians) * sin(distRadians) * cos(degreeRadians))
+//            let pointLonRadians: Double = centerLonRadians + atan2(sin(degreeRadians) * sin(distRadians) * cos(centerLatRadians), cos(distRadians) - sin(centerLatRadians) * sin(pointLatRadians))
+//            let pointLat: Double = pointLatRadians * 180 / M_PI
+//            let pointLon: Double = pointLonRadians * 180 / M_PI
+//            let point: CLLocationCoordinate2D = CLLocationCoordinate2DMake(pointLat, pointLon)
+//            coordinates.append(point)
+//        }
+//        let polygon = MGLPolygon(coordinates: &coordinates, count: UInt(coordinates.count))
+//        
+//        
+//        self.mapBox.addAnnotation(polygon)
+//    }
     
     func zoomCameraToCurrentCenter() {
         print("q")
@@ -174,8 +189,6 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     func locationManager(manager: LKLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let currentLoc = locations.first {
             self.currentLoc = currentLoc
-            
-            _ = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.stopSettingCenterCoord), userInfo: nil, repeats: false)
             
             if stopSettingCenter == false {
                 self.currentCenter = CLLocationCoordinate2D(latitude: currentLoc.coordinate.latitude, longitude: currentLoc.coordinate.longitude)
@@ -280,45 +293,67 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
 //        }
 //    }
     
-    @IBAction func getLocation(sender: UIButton) {
+    func startRequestingPeopleNearby() {
+        
+        //grab all people nearby and put them into an array
         
         locationManager.requestPeopleNearby { (people: [LKPerson]?, error: NSError?) -> Void in
             if let people = people {
                 print("There are \(people.count) other users of this app nearby you")
-                self.dnaPointsLbl.text = String(people.count)
                 
-                for person in people {
-                    if let name = person.name {
-                        print(name)
-                        self.namesString.appendContentsOf(name)
-                        self.namesLbl.text = self.namesString
-                        
-                        
-                        
-//                        DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").observeSingleEventOfType(FEventType.Value, withBlock: { snapshot in
-//                            
-//                            if let snapshots = snapshot.children.allObjects as? [FDataSnapshot] {
-//                                for snap in snapshots { //for disease in diseases
-//                                    
-//                                    if let disease = snap.value as? Dictionary<String, AnyObject> {
-//                                        
-//                                    }
-//                                }
-//                            }
-//  
-//                        })
+                //grab self.diseases from firebase
+                
+                DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").observeSingleEventOfType(FEventType.Value, withBlock: { diseaseDict in
+                    
+                    if let diseaseDict = diseaseDict.value as? Dictionary<String, String> {
+                        self.diseaseDict = diseaseDict
+                        print(self.diseaseDict)
                     }
-                    if let deviceId = person.deviceId {
-                        print(deviceId)
+                    
+                //loop through people nearby and check if they are in self.diseasDict, if not, add them
+                    
+                    for person in people {
+                        
+                        if let uid = person.name {      //also set personID or device ID
+                            
+                            //returns true if we need to add this uid to self.diseaseDict
+                            let shouldAdd = self.diseaseDict[uid] == nil
+                                
+                            if shouldAdd {
+                                self.diseaseDict[uid] = "insomnia"
+                                self.createAnnotationForCoord(person.location)
+                                
+                                //grab UID's disease array
+                                // for each entry in UID's disease array, also check if should add to self.diseaseDict
+                                
+                                
+                                //credit anyone we get infected by with an infection
+                            }
+                        }
                     }
-                    if let personId = person.personId {
-                        print(personId)
-                    }
-                }
+                    
+                    print(self.diseaseDict)
+                    self.namesLbl.text = self.diseaseDict.description
+                    self.dnaPointsLbl.text = String(self.diseaseDict.count)
+                    
+                    //write self.diseasedict back to firebase
+                    DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").setValue(self.diseaseDict)
+                
+                })
+                
+                
             } else {
                 print("Sorry, no other users of this app found nearby you")
             }
+            
+            //self.locationManager.stopMonitoringVisits()
         }
+        
+    }
+    
+    @IBAction func getLocation(sender: UIButton) {
+        startRequestingPeopleNearby()
+        _ = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(self.startRequestingPeopleNearby), userInfo: nil, repeats: true)
     }
     
 //    func setupObserver() {
@@ -380,10 +415,10 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
 //        })
 //    }
     
-    func createAnnotationForLocation(location: CLLocation) {
+    func createAnnotationForCoord(coord: CLLocationCoordinate2D) {
         
         let point = MGLPointAnnotation()
-        point.coordinate = location.coordinate
+        point.coordinate = coord    //location.coordinate
         //point.title = "Voodoo Doughnut"
         //point.subtitle = "22 SW 3rd Avenue Portland Oregon, U.S.A."
         
