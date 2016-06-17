@@ -15,6 +15,7 @@
 //find place on initial install startup
 //persist numInfected / annotations
 //random disease name generator
+//create prompt to name disease
 
 //BUGS 
 
@@ -44,6 +45,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     @IBOutlet weak var namesLbl: UILabel!
     var namesString = ""
     var stopSettingCenter = false
+    var shouldCreateContactAnnotation = true
     
     @IBOutlet weak var dnaPointsLbl: UILabel!
     var currentPlaceStr: String = ""
@@ -53,6 +55,9 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     var firstObserver = true
     var UID = ""
     var diseaseDict: Dictionary<String,String> = ["":""]
+    var diseaseDictCopy: Dictionary<String,String> = ["":""]
+    var oldDiseaseDict: Dictionary<String,String> = ["":""]
+    var infectedDict: Dictionary<String, String> = ["":""]
     
     var diseases: [String] = []
     //var firstRun = NSUserdefaults
@@ -71,7 +76,9 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        ClLocationManager.delegate = self
+        listenForInfectionCredits()
+        
+        //        ClLocationManager.delegate = self
 //        ClLocationManager.desiredAccuracy = kCLLocationAccuracyBest
 //        ClLocationManager.requestWhenInUseAuthorization()
 //        ClLocationManager.startUpdatingLocation()
@@ -153,7 +160,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
             print("r")
             let camera = MGLMapCamera(lookingAtCenterCoordinate: currentCenter, fromDistance: 30000, pitch: 0, heading: 0)
             
-            mapBox.setCamera(camera, withDuration: 2, animationTimingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
+            mapBox.setCamera(camera, withDuration: 3, animationTimingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
             
             //polygonCircleForCoordinate(currentCenter, withMeterRadius: 500)
         }
@@ -293,15 +300,27 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
 //        }
 //    }
     
+    func listenForInfectionCredits() {
+        DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/infected").observeEventType(.Value, withBlock: {infectedDict in
+        
+            if let infectedDict = infectedDict.value as? Dictionary<String, String> {
+                self.infectedDict = infectedDict
+                print(self.infectedDict)
+            }
+        
+        })
+    }
+    
     func startRequestingPeopleNearby() {
         
         //grab all people nearby and put them into an array
+        
         
         locationManager.requestPeopleNearby { (people: [LKPerson]?, error: NSError?) -> Void in
             if let people = people {
                 print("There are \(people.count) other users of this app nearby you")
                 
-                //grab self.diseases from firebase
+                //grabs self.diseases from firebase      //what if no people nearby? still need to update
                 
                 DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").observeSingleEventOfType(FEventType.Value, withBlock: { diseaseDict in
                     
@@ -312,22 +331,58 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                     
                 //loop through people nearby and check if they are in self.diseasDict, if not, add them
                     
+                    self.shouldCreateContactAnnotation = true
+                    
                     for person in people {
                         
                         if let uid = person.name {      //also set personID or device ID
+                            print("UID NEARBY: \(uid)")
                             
                             //returns true if we need to add this uid to self.diseaseDict
+                            //** not only should we add this uid, but we need to add it's diseaseDict as well!
+                            //** shouldn't we always do that too? or time limit
                             let shouldAdd = self.diseaseDict[uid] == nil
                                 
                             if shouldAdd {
-                                self.diseaseDict[uid] = "insomnia"
-                                self.createAnnotationForCoord(person.location)
                                 
-                                //grab UID's disease array
-                                // for each entry in UID's disease array, also check if should add to self.diseaseDict
+                                self.oldDiseaseDict = self.diseaseDict  //capture oldDiseaseDict
+                                
+                                DataService.ds.REF_USERS.childByAppendingPath("/\(uid)/diseases").observeSingleEventOfType(.Value, withBlock: {
+                                    uidDiseaseDict in
+                                
+                                    if let uidDiseaseDict = uidDiseaseDict.value as? Dictionary<String, String> {
+                                        
+                                        
+                                        print("Disease dict for uid \(uid): \(uidDiseaseDict)")
+                                        
+                                        // merge uidDiseaseDict into self.diseaseDict
+                                        
+                                        self.diseaseDict.unionInPlace(uidDiseaseDict)   //self.diseaseDict has been changed
+                                        self.diseaseDictCopy = self.diseaseDict
+                                    }
+                                    
+                                    self.diseaseDictCopy.subtractThis(self.oldDiseaseDict)  //now we have the new - orig, show what was just added
+                                    
+                                    //now loop through what was added
+                                    for (key, _) in self.diseaseDictCopy {
+                                        
+                                        //credit these uids with an infection
+                                        //which means add of self.uid entry to this uid's infected dict
+                                        
+                                        //first
+                                        
+                                        DataService.ds.REF_USERS.childByAppendingPath("/\(key)/diseases").childByAutoId().setValue([self.UID:"self disease name"])
+                                        
+                                    }
+                                    
+                                })
                                 
                                 
-                                //credit anyone we get infected by with an infection
+                                if self.shouldCreateContactAnnotation {
+                                    self.createAnnotationForCoord(person.location)
+                                }
+                                
+                                self.shouldCreateContactAnnotation = false
                             }
                         }
                     }
@@ -335,6 +390,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                     print(self.diseaseDict)
                     self.namesLbl.text = self.diseaseDict.description
                     self.dnaPointsLbl.text = String(self.diseaseDict.count)
+                    self.namesLbl.text = String(self.infectedDict.count)
                     
                     //write self.diseasedict back to firebase
                     DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").setValue(self.diseaseDict)
@@ -348,6 +404,8 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
             
             //self.locationManager.stopMonitoringVisits()
         }
+        
+        
         
     }
     
@@ -429,5 +487,6 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+    
     
 }

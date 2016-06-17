@@ -56,8 +56,10 @@ class LoginVC: UIViewController {
                     } else {
                         print("logged in!\(authData)")
                         
-                        let diseaseDict = [authData.uid: "Steve Disease"]
-                        let user = ["isActive": "true", "diseases": diseaseDict as Dictionary<String, AnyObject>, "provider": authData.provider!]
+                        let diseaseDict = [authData.uid: "stev diseas"]
+                        let infectedDict = ["":""]
+                        
+                        let user = ["isActive": "true", "diseases": diseaseDict as Dictionary<String, AnyObject>, "infected": infectedDict as Dictionary<String, AnyObject>, "provider": authData.provider!]
                         
                         DataService.ds.createFireBaseUser(authData.uid, user: user as! Dictionary<String, AnyObject>)
                         

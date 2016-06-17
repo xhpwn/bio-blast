@@ -160,7 +160,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         if annotation.isKindOfClass(ContactAnnotation) {
             let annoView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "Default")
-            annoView.pinTintColor = UIColor.blackColor()
+            if #available(iOS 9.0, *) {
+                annoView.pinTintColor = UIColor.blackColor()
+            } else {
+                // Fallback on earlier versions
+            }
             annoView.animatesDrop = true
             
             return annoView
