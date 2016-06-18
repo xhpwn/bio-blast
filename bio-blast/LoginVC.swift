@@ -57,7 +57,7 @@ class LoginVC: UIViewController {
                         print("logged in!\(authData)")
                         
                         let diseaseDict = [authData.uid: "stev diseas"]
-                        let infectedDict = ["":""]
+                        let infectedDict = [authData.uid:"name of disease"]
                         
                         let user = ["isActive": "true", "diseases": diseaseDict as Dictionary<String, AnyObject>, "infected": infectedDict as Dictionary<String, AnyObject>, "provider": authData.provider!]
                         
