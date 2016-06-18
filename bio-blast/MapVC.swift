@@ -75,7 +75,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        listenForInfectionCredits()
+        
         
         mapBox.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         mapBox.delegate = self
@@ -102,6 +102,8 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         locationManager.advancedDelegate = self
         locationManager.startUpdatingLocation()
         locationManager.startMonitoringVisits()
+        
+        listenForInfectionCredits()
         
         _ = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.stopSettingCenterCoord), userInfo: nil, repeats: false)
     }
@@ -138,9 +140,10 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         //grab all people nearby and put them into an array
         
         locationManager.requestPeopleNearby { (people: [LKPerson]?, error: NSError?) -> Void in
-
-                //grabs self.diseases from firebase      //what if no people nearby? still need to update?
+            
+            if let people = people {    //what if no people nearby? still need to update? no?   //testcase
                 
+                //grabs self.diseases from firebase
                 DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").observeSingleEventOfType(FEventType.Value, withBlock: { diseaseDict in
                     
                     if let diseaseDict = diseaseDict.value as? Dictionary<String, String> {
@@ -155,14 +158,17 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                     self.shouldCreateContactAnnotation = true
                     
                     //TEST DATA
-                    let testPeople = ["facebook:117882401968744", "testuid1"]       //use legit uids, these uids must have correct firebase model too
+                    //let testPeople = ["facebook:117882401968744", "testuid1"]       //use legit uids, these uids must have correct firebase model too   //testcase
                     
-                    for person in testPeople {
+                    for person in people {
+                    //for person in testPeople {        //testcase
 
-                        let uid = person       //also set personID or device ID
-                            //print("UID NEARBY: \(uid)")
+                        //let uid = person       //also set personID or device ID     //testcase
+                        let uid = person.name
+                        
+                            print("UID NEARBY: \(uid)")
 
-                            let shouldAdd = true
+                            let shouldAdd = true    //test ifActive in future?
                             
                             if shouldAdd {
                                 
@@ -206,11 +212,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                                             //credit these uids with an infection
                                             //which means add of self.uid entry to this uid's infected dict
                                             
-                                            //observe single event on dict, add entry, then set value
-                                            
-                                            DataService.ds.REF_USERS.childByAppendingPath("/\(key)/hasInfected").setValue([self.UID:"self disease name"])
-                                            
-                                            //may be overwritten ! if more than one user crediting to this uid.. FIX
+                                            DataService.ds.REF_USERS.childByAppendingPath("/\(key)/hasInfected").updateChildValues([self.UID:"self disease name"])
                                         }
                                         
                                         self.totalInfectedLbl.text = String(self.infectedDict.count)
@@ -227,21 +229,24 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                     }
                     
                     print("OUTSIDE OF CLOSURE, SELF.DISEASES: \(self.diseaseDict)")
-                    
-                    
+
                     self.totalInfectedLbl.text = String(self.infectedDict.count)
                     
                 })
+            }   //testcase
         }
     }
     
     
     func listenForInfectionCredits() {
-        DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/infected").observeEventType(.Value, withBlock: {infectedDict in
+        DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/hasInfected").observeEventType(.Value, withBlock: {infectedDict in
+            
+            print("observed")
             
             if let infectedDict = infectedDict.value as? Dictionary<String, String> {
                 self.infectedDict = infectedDict
                 print(self.infectedDict)
+                self.totalInfectedLbl.text = String(self.infectedDict.count) //also in people nearby
             }
             
         })
