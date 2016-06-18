@@ -90,7 +90,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         
         //FIX
         
-        //let center = CLLocationCoordinate2D(latitude: 42.22154654, longitude: -88.22007143)
+        //let center = CLLocationCoordinate2D(latitude: 40.4269646, longitude: -86.9182388)
         //mapBox.setCenterCoordinate(center, zoomLevel: 2, dirsection: 0, animated: false)
         
         locationManager.debug = true
@@ -112,6 +112,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         locationManager.startMonitoringVisits()
         
         _ = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.stopSettingCenterCoord), userInfo: nil, repeats: false)
+        
     
         
     }
@@ -128,7 +129,124 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         return 0.2
     }
     
-//    func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRadius: Double) {
+    
+    func startTestingPeopleNearby() {
+        
+        //grab all people nearby and put them into an array
+        
+        locationManager.requestPeopleNearby { (people: [LKPerson]?, error: NSError?) -> Void in
+
+                //grabs self.diseases from firebase      //what if no people nearby? still need to update?
+                
+                DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").observeSingleEventOfType(FEventType.Value, withBlock: { diseaseDict in
+                    
+                    if let diseaseDict = diseaseDict.value as? Dictionary<String, String> {
+                        self.diseaseDict = diseaseDict
+                        print("INITIALLY RETRIEVED SELF.DISEASES: \(self.diseaseDict)")
+                    }
+                    
+                    self.oldDiseaseDict = self.diseaseDict  //capture oldDiseaseDict
+                    
+                    //loop through people nearby and check if they are in self.diseasDict, if not, add them
+                    
+                    self.shouldCreateContactAnnotation = true
+                    
+                    //TEST DATA
+                    let testPeople = ["facebook:117882401968744", "testuid1"]       //use legit uids, these uids must have correct firebase model too
+                    
+                    for person in testPeople {
+
+                        let uid = person       //also set personID or device ID
+                            //print("UID NEARBY: \(uid)")
+
+                            let shouldAdd = true
+                            
+                            if shouldAdd {
+                                
+                                //self.oldDiseaseDict = self.diseaseDict  //capture oldDiseaseDict
+                                
+                                print("OLD SELF DISEASE DICT1: \(self.oldDiseaseDict)")
+                                
+                                DataService.ds.REF_USERS.childByAppendingPath("/\(uid)/diseases").observeSingleEventOfType(.Value, withBlock: {
+                                    uidDiseaseDict in
+                                    
+                                    if let uidDiseaseDict = uidDiseaseDict.value as? Dictionary<String, String> {
+                                        
+                                        print("DISEASES FOR \(uid): \(uidDiseaseDict)")
+                                        
+                                        // merging uidDiseaseDict into self.diseaseDict
+                                        
+                                        self.diseaseDict.unionInPlace(uidDiseaseDict)   //self.diseaseDict has been changed
+                                        
+                                        print("AFTER UNION: \(self.diseaseDict)")
+                                        
+                                        self.diseaseDictCopy = self.diseaseDict
+                                        
+                                        
+                                        print("OLD SELF DISEASE DICT2: \(self.oldDiseaseDict)")
+                                        self.diseaseDictCopy.subtractThis(self.oldDiseaseDict)  //now we have the new - orig, show what was just added
+                                        
+                                        self.oldDiseaseDict = self.diseaseDict  //capture oldDiseaseDict
+                                        print("OLD SELF DISEASE DICT3: \(self.oldDiseaseDict)")
+                                        
+                                        print("THESE WERE ADDED: \(self.diseaseDictCopy)")
+                                        
+                                        //update self.diseases on firebase (after each merge)..
+                                        
+                                        DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").setValue(self.diseaseDict)
+                                        self.namesLbl.text = self.diseaseDict.description
+                                        self.dnaPointsLbl.text = String(self.diseaseDict.count)
+                                        
+                                        //now loop through what was added
+                                        for (key, _) in self.diseaseDictCopy {
+                                            
+                                            //credit these uids with an infection
+                                            //which means add of self.uid entry to this uid's infected dict
+                                            
+                                            //observe single event on dict, add entry, then set value
+                                            
+                                            DataService.ds.REF_USERS.childByAppendingPath("/\(key)/hasInfected").setValue([self.UID:"self disease name"])
+                                            
+                                            //may be overwritten ! if more than one user crediting to this uid.. FIX
+                                        }
+                                        
+                                        self.totalInfectedLbl.text = String(self.infectedDict.count)
+                                    }
+                                })
+                                
+                                if self.shouldCreateContactAnnotation {
+                                    //FIX: this loc is hardcoded .. should be person.location
+                                    self.createAnnotationForCoord(CLLocationCoordinate2D(latitude: 40.4269646, longitude: -86.9182388))
+                                }
+                                
+                                self.shouldCreateContactAnnotation = false
+                            }
+                    }
+                    
+                    print("OUTSIDE OF CLOSURE, SELF.DISEASES: \(self.diseaseDict)")
+                    
+                    
+                    self.totalInfectedLbl.text = String(self.infectedDict.count)
+                    
+                })
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //    func polygonCircleForCoordinate(coordinate: CLLocationCoordinate2D, withMeterRadius: Double) {
 //        let degreesBetweenPoints = 8.0
 //        //45 sides
 //        let numberOfPoints = floor(360.0 / degreesBetweenPoints)
@@ -341,7 +459,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                             //returns true if we need to add this uid to self.diseaseDict
                             //** not only should we add this uid, but we need to add it's diseaseDict as well!
                             //** shouldn't we always do that too? or time limit
-                            let shouldAdd = self.diseaseDict[uid] == nil
+                            let shouldAdd = true        //self.diseaseDict[uid] == nil   FIX
                                 
                             if shouldAdd {
                                 
@@ -359,22 +477,19 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                                         
                                         self.diseaseDict.unionInPlace(uidDiseaseDict)   //self.diseaseDict has been changed
                                         self.diseaseDictCopy = self.diseaseDict
+                                        
+                                        self.diseaseDictCopy.subtractThis(self.oldDiseaseDict)  //now we have the new - orig, show what was just added
+                                        
+                                        //now loop through what was added
+                                        for (key, _) in self.diseaseDictCopy {
+                                            
+                                            //credit these uids with an infection
+                                            //which means add of self.uid entry to this uid's infected dict
+                                            
+                                            DataService.ds.REF_USERS.childByAppendingPath("/\(key)/diseases").childByAutoId().setValue([self.UID:"self disease name"])
+                                            
+                                        }
                                     }
-                                    
-                                    self.diseaseDictCopy.subtractThis(self.oldDiseaseDict)  //now we have the new - orig, show what was just added
-                                    
-                                    //now loop through what was added
-                                    for (key, _) in self.diseaseDictCopy {
-                                        
-                                        //credit these uids with an infection
-                                        //which means add of self.uid entry to this uid's infected dict
-                                        
-                                        //first
-                                        
-                                        DataService.ds.REF_USERS.childByAppendingPath("/\(key)/diseases").childByAutoId().setValue([self.UID:"self disease name"])
-                                        
-                                    }
-                                    
                                 })
                                 
                                 
@@ -410,8 +525,10 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     }
     
     @IBAction func getLocation(sender: UIButton) {
-        startRequestingPeopleNearby()
-        _ = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(self.startRequestingPeopleNearby), userInfo: nil, repeats: true)
+//        startRequestingPeopleNearby()
+//        _ = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(self.startRequestingPeopleNearby), userInfo: nil, repeats: true)
+        
+        startTestingPeopleNearby()
     }
     
 //    func setupObserver() {
