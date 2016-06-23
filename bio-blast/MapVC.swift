@@ -8,7 +8,6 @@
 
 //ADD
 //circle annotations to show other nearby users
-//use place for annotation location
 //turn off observer in background, possibly make single calls in loop for foreground
 //find place on initial install startup
 //persist numInfected / annotations
@@ -18,7 +17,6 @@
 //just start with local location view? as opposed to zooming in?.. zoom +/- buttons, or popdown sider?
 
 //use actual disease names
-//** fix crediting
 
 //BUGS 
 
@@ -28,6 +26,10 @@
 
 //make location options/ turn off arrow when app closes
 //look into beta service
+
+//ESSENTIAL
+//automate processes
+//enter name, disease name
 
 import UIKit
 import MapKit
@@ -74,9 +76,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
+
         mapBox.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         mapBox.delegate = self
         mapBox.tintColor = UIColor(red: 180/255, green: 45/255, blue: 58/255, alpha: 1)
@@ -106,12 +106,14 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         listenForInfectionCredits()
         
         _ = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.stopSettingCenterCoord), userInfo: nil, repeats: false)
+        
+        
     }
     @IBAction func peopleBtn(sender: AnyObject) {
         simplePeopleNearby()
     }
     
-    func simplePeopleNearby() {
+    func simplePeopleNearby() {     //looks for people nearby, and prints, just for debugging
         locationManager.requestPeopleNearby{ (people: [LKPerson]?, error: NSError?) -> Void in
         
             if let people = people {
@@ -141,7 +143,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         
         locationManager.requestPeopleNearby { (people: [LKPerson]?, error: NSError?) -> Void in
             
-            if let people = people {    //what if no people nearby? still need to update? no?   //testcase
+            if let people = people {    //what if no people nearby? still need to update? no?
                 
                 //grabs self.diseases from firebase
                 DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").observeSingleEventOfType(FEventType.Value, withBlock: { diseaseDict in
@@ -157,13 +159,8 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                     
                     self.shouldCreateContactAnnotation = true
                     
-                    //TEST DATA
-                    //let testPeople = ["facebook:117882401968744", "testuid1"]       //use legit uids, these uids must have correct firebase model too   //testcase
-                    
                     for person in people {
-                    //for person in testPeople {        //testcase
 
-                        //let uid = person       //also set personID or device ID     //testcase
                         let uid = person.name
                         
                             print("UID NEARBY: \(uid)")
@@ -171,8 +168,6 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                             let shouldAdd = true    //test ifActive in future?
                             
                             if shouldAdd {
-                                
-                                //self.oldDiseaseDict = self.diseaseDict  //capture oldDiseaseDict
                                 
                                 print("OLD SELF DISEASE DICT1: \(self.oldDiseaseDict)")
                                 
@@ -219,9 +214,8 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                                     }
                                 })
                                 
-                                if self.shouldCreateContactAnnotation {
-                                    //FIX: this loc is hardcoded .. should be person.location
-                                    self.createAnnotationForCoord(CLLocationCoordinate2D(latitude: 40.4269646, longitude: -86.9182388))
+                                if self.shouldCreateContactAnnotation  {
+                                    self.createAnnotationForCoord(person.location)
                                 }
                                 
                                 self.shouldCreateContactAnnotation = false
@@ -233,7 +227,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                     self.totalInfectedLbl.text = String(self.infectedDict.count)
                     
                 })
-            }   //testcase
+            }
         }
     }
     
@@ -302,100 +296,7 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         loadingBlanket.hidden = true
     }
     
-    func startRequestingPeopleNearby() {
-        
-        //grab all people nearby and put them into an array
-        
-        
-        locationManager.requestPeopleNearby { (people: [LKPerson]?, error: NSError?) -> Void in
-            if let people = people {
-                print("There are \(people.count) other users of this app nearby you")
-                
-                //grabs self.diseases from firebase      //what if no people nearby? still need to update
-                
-                DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").observeSingleEventOfType(FEventType.Value, withBlock: { diseaseDict in
-                    
-                    if let diseaseDict = diseaseDict.value as? Dictionary<String, String> {
-                        self.diseaseDict = diseaseDict
-                        print(self.diseaseDict)
-                    }
-                    
-                //loop through people nearby and check if they are in self.diseasDict, if not, add them
-                    
-                    self.shouldCreateContactAnnotation = true
-                    
-                    for person in people {
-                        
-                        if let uid = person.name {      //also set personID or device ID
-                            print("UID NEARBY: \(uid)")
-                            
-                            //returns true if we need to add this uid to self.diseaseDict
-                            //** not only should we add this uid, but we need to add it's diseaseDict as well!
-                            //** shouldn't we always do that too? or time limit
-                            let shouldAdd = true        //self.diseaseDict[uid] == nil   FIX
-                                
-                            if shouldAdd {
-                                
-                                self.oldDiseaseDict = self.diseaseDict  //capture oldDiseaseDict
-                                
-                                DataService.ds.REF_USERS.childByAppendingPath("/\(uid)/diseases").observeSingleEventOfType(.Value, withBlock: {
-                                    uidDiseaseDict in
-                                
-                                    if let uidDiseaseDict = uidDiseaseDict.value as? Dictionary<String, String> {
-                                        
-                                        
-                                        print("Disease dict for uid \(uid): \(uidDiseaseDict)")
-                                        
-                                        // merge uidDiseaseDict into self.diseaseDict
-                                        
-                                        self.diseaseDict.unionInPlace(uidDiseaseDict)   //self.diseaseDict has been changed
-                                        self.diseaseDictCopy = self.diseaseDict
-                                        
-                                        self.diseaseDictCopy.subtractThis(self.oldDiseaseDict)  //now we have the new - orig, show what was just added
-                                        
-                                        //now loop through what was added
-                                        for (key, _) in self.diseaseDictCopy {
-                                            
-                                            //credit these uids with an infection
-                                            //which means add of self.uid entry to this uid's infected dict
-                                            
-                                            DataService.ds.REF_USERS.childByAppendingPath("/\(key)/diseases").childByAutoId().setValue([self.UID:"self disease name"])
-                                            
-                                        }
-                                    }
-                                })
-                                
-                                
-                                if self.shouldCreateContactAnnotation {
-                                    self.createAnnotationForCoord(person.location)
-                                }
-                                
-                                self.shouldCreateContactAnnotation = false
-                            }
-                        }
-                    }
-                    
-                    print(self.diseaseDict)
-                    //self.namesLbl.text = self.diseaseDict.description
-                    self.dnaPointsLbl.text = String(self.diseaseDict.count)
-                    //self.totalInfectedLbl.text = String(self.infectedDict.count)
-                    
-                    //write self.diseasedict back to firebase
-                    DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").setValue(self.diseaseDict)
-                
-                })
-                
-                
-            } else {
-                print("Sorry, no other users of this app found nearby you")
-            }
-            
-            //self.locationManager.stopMonitoringVisits()
-        }
-        
-    }
-    
-    @IBAction func getLocation(sender: UIButton) {
+    @IBAction func startLookingNearby(sender: UIButton) {
 //        startRequestingPeopleNearby()
 //        _ = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(self.startRequestingPeopleNearby), userInfo: nil, repeats: true)
         

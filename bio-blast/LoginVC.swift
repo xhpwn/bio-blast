@@ -65,7 +65,35 @@ class LoginVC: UIViewController {
                         
                         NSUserDefaults.standardUserDefaults().setValue(authData.uid, forKey: KEY_UID)
                         self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
+                        
+                        //grab user info
+                        
+                        let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: accessToken, version: nil, HTTPMethod: "GET")
+                        req.startWithCompletionHandler({ (connection, result, error : NSError!) -> Void in
+                            if(error == nil)
+                            {
+                                print("result \(result)")
+                                
+                                if let FBInfoDict = result as? Dictionary<String, String> {
+                                    print("GO")
+                                    
+                                    if let FBUserName = FBInfoDict["name"] {
+                                        print(FBUserName)
+                                        NSUserDefaults.standardUserDefaults().setValue(FBUserName, forKey: "FBUserName")
+                                        DataService.ds.REF_USERS.childByAppendingPath("/\(authData.uid)").updateChildValues(["FBUserName":FBUserName])
+                                        
+                                    }
+                                    
+                                }
+                            }
+                            else
+                            {
+                                print("error \(error)")
+                            }
+                        })
                     }
+                    
+                    
                 })
                 
             }
