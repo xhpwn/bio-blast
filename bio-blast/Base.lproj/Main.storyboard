@@ -120,6 +120,7 @@
                     </view>
                     <connections>
                         <segue destination="lR0-lU-1jm" kind="show" identifier="loggedIn" animates="NO" id="cKV-uB-Sil"/>
+                        <segue destination="h3s-9V-sHr" kind="show" identifier="skipNaming" id="sQd-Xs-Lu3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rCj-WI-W4P" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -314,7 +315,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iit-zv-fo8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="242" y="250"/>
+            <point key="canvasLocation" x="242" y="214"/>
         </scene>
         <!--Delegate-->
         <scene sceneID="tpd-Ze-UCU">
@@ -638,4 +639,7 @@
         <image name="man" width="64" height="64"/>
         <image name="round_menu" width="128" height="128"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="sQd-Xs-Lu3"/>
+    </inferredMetricsTieBreakers>
 </document>

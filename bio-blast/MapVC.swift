@@ -12,7 +12,6 @@
 //find place on initial install startup
 //persist numInfected / annotations
 //random disease name generator
-//create prompt to name disease
 //implement DNA points
 //just start with local location view? as opposed to zooming in?.. zoom +/- buttons, or popdown sider?
 
@@ -21,7 +20,6 @@
 //BUGS 
 
 //verify name and deviceID
-//self.name in other users is different
 
 
 //make location options/ turn off arrow when app closes
@@ -29,8 +27,11 @@
 
 //ESSENTIAL
 //automate processes
-//enter disease name
-//if firebase acct already created, do not push the starting user dict
+//persist numInfected
+//persist
+
+//EXTRA
+//vc transitions 
 
 import UIKit
 import MapKit

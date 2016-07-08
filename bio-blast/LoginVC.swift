@@ -25,10 +25,17 @@ class LoginVC: UIViewController {
         
         print(NSUserDefaults.standardUserDefaults().valueForKey(KEY_UID))
         
-        if NSUserDefaults.standardUserDefaults().valueForKey(KEY_UID) != nil {
+        //Determine which VC to segue to initially, initally, if any
+        
+        if NSUserDefaults.standardUserDefaults().valueForKey("diseaseName") != nil {
+            
+            //self.performSegueWithIdentifier("skipNaming", sender: nil)
+        
+        } else if NSUserDefaults.standardUserDefaults().valueForKey(KEY_UID) != nil {
             
             self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
         }
+    
     }
     
 

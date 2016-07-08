@@ -29,6 +29,16 @@ class DiseaseNameVC: UIViewController, UITextFieldDelegate {
         })
     }
     
+    override func viewDidAppear(animated: Bool) {
+        
+        if NSUserDefaults.standardUserDefaults().valueForKey("diseaseName") != nil {
+            
+            self.performSegueWithIdentifier("toMap", sender: nil)
+        }
+        
+        diseaseNameTextFld.becomeFirstResponder()
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
         //read from textfield
@@ -37,6 +47,11 @@ class DiseaseNameVC: UIViewController, UITextFieldDelegate {
         
         //send self diseaseName to Firebase
         DataService.ds.REF_USERS.childByAppendingPath("/\(UID)").updateChildValues(["DiseaseName":diseaseName])
+        
+        DataService.ds.REF_USERS.childByAppendingPath("/\(UID)/diseases").updateChildValues([UID:diseaseName])
+        
+        //Set default so we don't come back to this (self) VC again
+        NSUserDefaults.standardUserDefaults().setValue(diseaseName, forKey: "diseaseName")
         
         //segue to next view
         performSegueWithIdentifier("toMap", sender: nil)
