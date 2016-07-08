@@ -296,33 +296,19 @@
                                     <constraint firstAttribute="width" constant="238" id="fBy-ZR-wDV"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IDf-U6-zsz">
-                                <rect key="frame" x="282" y="153" width="37" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Q8H-d3-WrQ"/>
-                                    <constraint firstAttribute="width" constant="37" id="hne-D5-hR6"/>
-                                </constraints>
-                                <state key="normal" title="Done">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="doneBtn:" destination="lR0-lU-1jm" eventType="touchUpInside" id="kfW-8g-hSs"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" cyan="0.81999999999999995" magenta="0.628035605" yellow="0.47941333060000002" black="0.028256846750000002" alpha="1" colorSpace="custom" customColorSpace="genericCMYKColorSpace"/>
                         <constraints>
                             <constraint firstItem="aN8-iA-0WJ" firstAttribute="centerX" secondItem="HYP-e5-avT" secondAttribute="centerX" id="1G5-9D-AZ7"/>
-                            <constraint firstItem="IDf-U6-zsz" firstAttribute="top" secondItem="aN8-iA-0WJ" secondAttribute="bottom" constant="26" id="Hxr-2f-Ohf"/>
                             <constraint firstItem="aN8-iA-0WJ" firstAttribute="top" secondItem="MZh-8P-S1L" secondAttribute="bottom" constant="34" id="OyS-nL-VOj"/>
                             <constraint firstItem="uGp-cd-LtO" firstAttribute="top" secondItem="aN8-iA-0WJ" secondAttribute="bottom" constant="85" id="UF4-Ce-wBc"/>
-                            <constraint firstItem="IDf-U6-zsz" firstAttribute="centerX" secondItem="HYP-e5-avT" secondAttribute="centerX" id="ZhA-3m-GRy"/>
                             <constraint firstItem="uGp-cd-LtO" firstAttribute="centerX" secondItem="HYP-e5-avT" secondAttribute="centerX" id="jET-Ew-ueY"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="diseaseNameTextFld" destination="uGp-cd-LtO" id="gEA-2y-oky"/>
                         <segue destination="h3s-9V-sHr" kind="show" identifier="toMap" id="zwG-Aa-JO2"/>
                     </connections>
                 </viewController>

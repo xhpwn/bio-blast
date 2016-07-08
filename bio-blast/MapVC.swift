@@ -95,7 +95,6 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
             print("UID: \(uid)")
         }
         
-        print(UID)
         let userValuesDict = ["name": UID] as [NSObject: AnyObject]
         
         locationManager.setUserValues(userValuesDict)
