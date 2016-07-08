@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aby-4p-Kix">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aby-4p-Kix">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -119,7 +119,7 @@
                         </variation>
                     </view>
                     <connections>
-                        <segue destination="h3s-9V-sHr" kind="show" identifier="loggedIn" animates="NO" id="UTG-At-DM8"/>
+                        <segue destination="lR0-lU-1jm" kind="show" identifier="loggedIn" animates="NO" id="cKV-uB-Sil"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rCj-WI-W4P" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -266,6 +266,69 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="198" y="-503"/>
+        </scene>
+        <!--Disease NameVC-->
+        <scene sceneID="u8z-hE-vqJ">
+            <objects>
+                <viewController id="lR0-lU-1jm" customClass="DiseaseNameVC" customModule="bio_blast" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MZh-8P-S1L"/>
+                        <viewControllerLayoutGuide type="bottom" id="jYE-Os-DZb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HYP-e5-avT">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Your Disease" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aN8-iA-0WJ">
+                                <rect key="frame" x="181" y="54" width="238" height="73"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="238" id="GZO-4v-zvo"/>
+                                    <constraint firstAttribute="height" constant="73" id="r6P-7i-7ZR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="23"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="uGp-cd-LtO">
+                                <rect key="frame" x="181" y="212" width="238" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="cEA-Qz-A9b"/>
+                                    <constraint firstAttribute="width" constant="238" id="fBy-ZR-wDV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IDf-U6-zsz">
+                                <rect key="frame" x="282" y="153" width="37" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Q8H-d3-WrQ"/>
+                                    <constraint firstAttribute="width" constant="37" id="hne-D5-hR6"/>
+                                </constraints>
+                                <state key="normal" title="Done">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="doneBtn:" destination="lR0-lU-1jm" eventType="touchUpInside" id="kfW-8g-hSs"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" cyan="0.81999999999999995" magenta="0.628035605" yellow="0.47941333060000002" black="0.028256846750000002" alpha="1" colorSpace="custom" customColorSpace="genericCMYKColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="aN8-iA-0WJ" firstAttribute="centerX" secondItem="HYP-e5-avT" secondAttribute="centerX" id="1G5-9D-AZ7"/>
+                            <constraint firstItem="IDf-U6-zsz" firstAttribute="top" secondItem="aN8-iA-0WJ" secondAttribute="bottom" constant="26" id="Hxr-2f-Ohf"/>
+                            <constraint firstItem="aN8-iA-0WJ" firstAttribute="top" secondItem="MZh-8P-S1L" secondAttribute="bottom" constant="34" id="OyS-nL-VOj"/>
+                            <constraint firstItem="uGp-cd-LtO" firstAttribute="top" secondItem="aN8-iA-0WJ" secondAttribute="bottom" constant="85" id="UF4-Ce-wBc"/>
+                            <constraint firstItem="IDf-U6-zsz" firstAttribute="centerX" secondItem="HYP-e5-avT" secondAttribute="centerX" id="ZhA-3m-GRy"/>
+                            <constraint firstItem="uGp-cd-LtO" firstAttribute="centerX" secondItem="HYP-e5-avT" secondAttribute="centerX" id="jET-Ew-ueY"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <segue destination="h3s-9V-sHr" kind="show" identifier="toMap" id="zwG-Aa-JO2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iit-zv-fo8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="242" y="250"/>
         </scene>
         <!--Delegate-->
         <scene sceneID="tpd-Ze-UCU">
@@ -577,7 +640,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zyl-QB-NpA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="198" y="250"/>
+            <point key="canvasLocation" x="956" y="250"/>
         </scene>
     </scenes>
     <resources>
