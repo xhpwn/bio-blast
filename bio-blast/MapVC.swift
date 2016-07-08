@@ -29,7 +29,8 @@
 
 //ESSENTIAL
 //automate processes
-//enter name, disease name
+//enter disease name
+//if firebase acct already created, do not push the starting user dict
 
 import UIKit
 import MapKit
@@ -94,7 +95,6 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
             print("UID: \(uid)")
         }
         
-        print(UID)
         let userValuesDict = ["name": UID] as [NSObject: AnyObject]
         
         locationManager.setUserValues(userValuesDict)

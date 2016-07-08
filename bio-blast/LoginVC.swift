@@ -56,15 +56,22 @@ class LoginVC: UIViewController {
                     } else {
                         print("logged in!\(authData)")
                         
-                        let diseaseDict = [authData.uid: "stev diseas"]
-                        let infectedDict = [authData.uid:"name of disease"]
-                        
-                        let user = ["isActive": "true", "diseases": diseaseDict as Dictionary<String, AnyObject>, "infected": infectedDict as Dictionary<String, AnyObject>, "provider": authData.provider!]
-                        
-                        DataService.ds.createFireBaseUser(authData.uid, user: user as! Dictionary<String, AnyObject>)
-                        
                         NSUserDefaults.standardUserDefaults().setValue(authData.uid, forKey: KEY_UID)
-                        self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
+                        
+                        // if there is no existing firebase data for this UID, then create new user
+                        DataService.ds.REF_USERS.childByAppendingPath("/\(authData.uid)/isActive").observeSingleEventOfType(.Value, withBlock: { active in
+                            
+                            if !active.exists() {
+                                let diseaseDict = [authData.uid: "stev diseas"]
+                                let infectedDict = [authData.uid:"name of disease"]
+                                
+                                let user = ["isActive": "true", "diseases": diseaseDict as Dictionary<String, AnyObject>, "hasInfected": infectedDict as Dictionary<String, AnyObject>, "provider": authData.provider!]
+                                
+                                DataService.ds.createFireBaseUser(authData.uid, user: user as! Dictionary<String, AnyObject>)
+                            }
+                        })
+                        
+                        //self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
                         
                         //grab user info
                         
@@ -81,9 +88,7 @@ class LoginVC: UIViewController {
                                         print(FBUserName)
                                         NSUserDefaults.standardUserDefaults().setValue(FBUserName, forKey: "FBUserName")
                                         DataService.ds.REF_USERS.childByAppendingPath("/\(authData.uid)").updateChildValues(["FBUserName":FBUserName])
-                                        
                                     }
-                                    
                                 }
                             }
                             else
@@ -91,18 +96,14 @@ class LoginVC: UIViewController {
                                 print("error \(error)")
                             }
                         })
+                        
+                        //Move to next view
+                        self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
                     }
-                    
-                    
                 })
-                
             }
-            
 //            facebookLogin.logOut()
 //            NSUserDefaults.standardUserDefaults().setValue(nil, forKey: KEY_UID)
         }
     }
-    
-
-
 }

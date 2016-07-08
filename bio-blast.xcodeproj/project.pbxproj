@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B3A51901D143F7E0099D5BB /* DictionaryUnionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3A518F1D143F7E0099D5BB /* DictionaryUnionExtension.swift */; };
+		1B47ECA11D2F475B00D93058 /* DiseaseNameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47ECA01D2F475B00D93058 /* DiseaseNameVC.swift */; };
 		1B955A991D053F4B003C3BF1 /* RoundedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B955A981D053F4B003C3BF1 /* RoundedBar.swift */; };
 		1BCA83C91CFBD76E004C455A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83C81CFBD76E004C455A /* AppDelegate.swift */; };
 		1BCA83CB1CFBD76E004C455A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCA83CA1CFBD76E004C455A /* ViewController.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		0E1C014A25BE05B37A9E1D4F /* Pods-bio-blast.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bio-blast.debug.xcconfig"; path = "Pods/Target Support Files/Pods-bio-blast/Pods-bio-blast.debug.xcconfig"; sourceTree = "<group>"; };
 		1B3A518F1D143F7E0099D5BB /* DictionaryUnionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DictionaryUnionExtension.swift; path = ../DictionaryUnionExtension.swift; sourceTree = "<group>"; };
+		1B47ECA01D2F475B00D93058 /* DiseaseNameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiseaseNameVC.swift; sourceTree = "<group>"; };
 		1B955A981D053F4B003C3BF1 /* RoundedBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedBar.swift; sourceTree = "<group>"; };
 		1BCA83C51CFBD76E004C455A /* bio-blast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "bio-blast.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BCA83C81CFBD76E004C455A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				1BCA83CA1CFBD76E004C455A /* ViewController.swift */,
 				1BCA83E31CFC0BB5004C455A /* LoginVC.swift */,
 				1BF05BEB1D01BAC50066A314 /* MapVC.swift */,
+				1B47ECA01D2F475B00D93058 /* DiseaseNameVC.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B47ECA11D2F475B00D93058 /* DiseaseNameVC.swift in Sources */,
 				1BCA83D11CFBD76E004C455A /* bio_blast.xcdatamodeld in Sources */,
 				1BF05BE81D01AF3E0066A314 /* ClippedCircle.swift in Sources */,
 				1BCA83CB1CFBD76E004C455A /* ViewController.swift in Sources */,
