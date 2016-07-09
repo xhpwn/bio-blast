@@ -108,6 +108,12 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
         listenForInfectionCredits()
         
         _ = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.stopSettingCenterCoord), userInfo: nil, repeats: false)
+        
+        if let fbuser = NSUserDefaults.standardUserDefaults().valueForKey("FBUserName") {
+            DataService.ds.REF_USERS.childByAppendingPath("/\(UID)").updateChildValues(["user":fbuser])
+            print("We done it")
+        }
+        
 
     }
     
@@ -201,6 +207,8 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                                 
                                 print("OLD SELF DISEASE DICT1: \(self.oldDiseaseDict)")
                                 
+                                self.diseaseDictCopy = ["":""]
+                                
                                 DataService.ds.REF_USERS.childByAppendingPath("/\(uid)/diseases").observeSingleEventOfType(.Value, withBlock: {
                                     uidDiseaseDict in
                                     
@@ -229,10 +237,14 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                                         
                                         DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/diseases").setValue(self.diseaseDict)
                                         //self.namesLbl.text = self.diseaseDict.description
+                                        
+                                        //FIX
                                         self.dnaPointsLbl.text = String(self.diseaseDict.count)
                                         
                                         //now loop through what was added
                                         for (key, _) in self.diseaseDictCopy {
+                                            
+                                            
                                             
                                             //credit these uids with an infection
                                             //which means add a self.uid entry to this uid's infected dict
@@ -250,16 +262,40 @@ class MapVC: UIViewController, MGLMapViewDelegate, LKLocationManagerDelegate {
                                 })
                                 
                                 if self.shouldCreateContactAnnotation  {
-                                    self.createAnnotationForCoord(person.location)
-                                    self.eventID += 1
                                     
-                                    //Write annotation coords for this Contact Event to Firebase
+                                    let anyDiseasesWereAddedToSelfDiseases = !(self.diseaseDictCopy.isEmpty)
                                     
-                                    let lat = Double(person.location.latitude)
-                                    let long = Double(person.location.longitude)
-                                    
-                                    
-                                    DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/contactEvents/\(self.eventID)").updateChildValues(["lat": lat, "long": long])
+                                    if anyDiseasesWereAddedToSelfDiseases {
+                                        
+                                        DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/contactEvents/").observeSingleEventOfType(.Value, withBlock: { contactEvents in
+                                            
+                                            if let contactEvents = contactEvents {          //if contact events exists
+                                                let prevEventID = contactEvents.childrenCount
+                                                
+                                                self.createAnnotationForCoord(person.location)
+                                                self.eventID  = Int(prevEventID) + 1
+                                                
+                                                //Write annotation coords for this Contact Event to Firebase
+                                                let lat = Double(person.location.latitude)
+                                                let long = Double(person.location.longitude)
+                                                
+                                                
+                                                DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/contactEvents/\(self.eventID)").updateChildValues(["lat": lat, "long": long])
+                                            } else {
+                                                let prevEventID = 0
+                                                
+                                                self.createAnnotationForCoord(person.location)
+                                                self.eventID  = Int(prevEventID) + 1
+                                                
+                                                //Write annotation coords for this Contact Event to Firebase
+                                                let lat = Double(person.location.latitude)
+                                                let long = Double(person.location.longitude)
+                                                
+                                                DataService.ds.REF_USERS.childByAppendingPath("/\(self.UID)/contactEvents/\(self.eventID)").updateChildValues(["lat": lat, "long": long])
+                                                
+                                            }
+                                        })
+                                    }
                                 }
                                 
                                 self.shouldCreateContactAnnotation = false

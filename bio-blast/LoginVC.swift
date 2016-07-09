@@ -27,11 +27,7 @@ class LoginVC: UIViewController {
         
         //Determine which VC to segue to initially, initally, if any
         
-        if NSUserDefaults.standardUserDefaults().valueForKey("diseaseName") != nil {
-            
-            //self.performSegueWithIdentifier("skipNaming", sender: nil)
-        
-        } else if NSUserDefaults.standardUserDefaults().valueForKey(KEY_UID) != nil {
+        if NSUserDefaults.standardUserDefaults().valueForKey(KEY_UID) != nil {
             
             self.performSegueWithIdentifier(SEGUE_LOGGED_IN, sender: nil)
         }
@@ -95,6 +91,8 @@ class LoginVC: UIViewController {
                                         print(FBUserName)
                                         NSUserDefaults.standardUserDefaults().setValue(FBUserName, forKey: "FBUserName")
                                         DataService.ds.REF_USERS.childByAppendingPath("/\(authData.uid)").updateChildValues(["FBUserName":FBUserName])
+                                        
+                                        //.updateChildValues(["FBUserName":FBUserName])
                                     }
                                 }
                             }

@@ -17,13 +17,17 @@ class DiseaseNameVC: UIViewController, UITextFieldDelegate {
     var diseaseName = ""
     
     override func viewDidLoad() {
+
         super.viewDidLoad()
         diseaseNameTextFld.delegate = self
         setUID()
+
+        //FIX : how this is done
         
         DataService.ds.REF_USERS.childByAppendingPath("/\(UID)/DiseaseName").observeSingleEventOfType(.Value, withBlock: { diseaseName in
             
             if diseaseName.exists() {
+                NSUserDefaults.standardUserDefaults().setValue(self.diseaseName, forKey: "diseaseName")
                 self.performSegueWithIdentifier("toMap", sender: nil)
             }
         })
@@ -37,6 +41,7 @@ class DiseaseNameVC: UIViewController, UITextFieldDelegate {
         }
         
         diseaseNameTextFld.becomeFirstResponder()
+        
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
